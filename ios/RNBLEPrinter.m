@@ -1,11 +1,3 @@
-//
-//  RNBLEPrinter.m
-//
-//  Created by MTT on 06/10/19.
-//  Copyright © 2019 Facebook. All rights reserved.
-//
-
-
 #import <Foundation/Foundation.h>
 
 #import "RNBLEPrinter.h"
@@ -71,7 +63,7 @@ RCT_EXPORT_METHOD(connectPrinter:(NSString *)inner_mac_address
                 *stop = YES;
             }
         }];
-        
+
         if (found) {
             [[PrinterSDK defaultPrinterSDK] connectBT:selectedPrinter];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"BLEPrinterConnected" object:nil];
@@ -90,7 +82,7 @@ RCT_EXPORT_METHOD(printRawData:(NSString *)text
                   fail:(RCTResponseSenderBlock)errorCallback) {
     @try {
         !m_printer ? [NSException raise:@"Invalid connection" format:@"printRawData: Can't connect to printer"] : nil;
-        
+
         NSNumber* boldPtr = [options valueForKey:@"bold"];
         NSNumber* alignCenterPtr = [options valueForKey:@"center"];
 
@@ -100,16 +92,16 @@ RCT_EXPORT_METHOD(printRawData:(NSString *)text
         bold ? [[PrinterSDK defaultPrinterSDK] sendHex:@"1B2108"] : [[PrinterSDK defaultPrinterSDK] sendHex:@"1B2100"];
         alignCenter ? [[PrinterSDK defaultPrinterSDK] sendHex:@"1B6102"] : [[PrinterSDK defaultPrinterSDK] sendHex:@"1B6101"];
         [[PrinterSDK defaultPrinterSDK] printText:text];
-        
+
         NSNumber* beepPtr = [options valueForKey:@"beep"];
         NSNumber* cutPtr = [options valueForKey:@"cut"];
-        
+
         BOOL beep = (BOOL)[beepPtr intValue];
         BOOL cut = (BOOL)[cutPtr intValue];
-        
+
         beep ? [[PrinterSDK defaultPrinterSDK] beep] : nil;
         cut ? [[PrinterSDK defaultPrinterSDK] cutPaper] : nil;
-        
+
     } @catch (NSException *exception) {
         errorCallback(@[exception.reason]);
     }

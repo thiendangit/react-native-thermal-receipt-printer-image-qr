@@ -9,7 +9,7 @@ import {
   NetPrinterEventEmitter,
   RN_THERMAL_RECEIPT_PRINTER_EVENTS,
   NetPrinter,
-} from 'react-native-thermal-receipt-printer';
+} from 'react-native-thermal-receipt-printer-image-gr';
 import Loading from '../Loading';
 import {navigate} from './App';
 

@@ -1341,9 +1341,9 @@
   integrity sha512-qcUXuemtEu+E5wZSJHNxUXeCZhAfXKQ41D+duX+VYPde7xyEVZci+/oXKJL13tnRs9lR2pr4fod59GT6/X1/yQ==
 
 "@types/node@*":
-  version "16.11.8"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.8.tgz#a1aeb23f0aa33cb111e64ccaa1687b2ae0423b69"
-  integrity sha512-hmT5gfpRkkHr7DZZHMf3jBe/zNcVGN+jXSL2f8nAsYfBPxQFToKwQlS/zES4Sjp488Bi73i+p6bvrNRRGU0x9Q==
+  version "16.11.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.9.tgz#879be3ad7af29f4c1a5c433421bf99fab7047185"
+  integrity sha512-MKmdASMf3LtPzwLyRrFjtFFZ48cMf8jmX5VRYrDQiJa8Ybu5VAmkqBWqKU8fdCwD8ysw4mQ9nrEHvzg6gunR7A==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -5679,9 +5679,9 @@ react-native-svg@^12.1.1:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
 
-"react-native-thermal-receipt-printer@https://github.com/thiendangit/react-native-thermal-receipt-printer-Image-Qr.git":
+"react-native-thermal-receipt-printer-image-gr@https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr.git":
   version "1.1.5"
-  resolved "https://github.com/thiendangit/react-native-thermal-receipt-printer-Image-Qr.git#b37a8e3b6317e9b8c8097ec5cf61143292b405d5"
+  resolved "https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr.git#bdd0003b5cce3263370a9d683981b47d58491aa5"
   dependencies:
     buffer "^5.6.0"
     iconv-lite "^0.6.2"
