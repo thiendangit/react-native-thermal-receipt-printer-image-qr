@@ -319,7 +319,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - react-native-thermal-receipt-printer (from `../node_modules/react-native-thermal-receipt-printer`)
+  - react-native-thermal-receipt-printer (from `../node_modules/react-native-thermal-receipt-printer-image-gr`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -382,7 +382,7 @@ EXTERNAL SOURCES:
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-thermal-receipt-printer:
-    :path: "../node_modules/react-native-thermal-receipt-printer"
+    :path: "../node_modules/react-native-thermal-receipt-printer-image-gr"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
