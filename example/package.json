@@ -1,0 +1,59 @@
+{
+  "name": "rnprinter",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "node node_modules/react-native/local-cli/cli.js run-ios --simulator=\"iPhone 11\"",
+    "android-dev": "adb reverse tcp:8081 tcp:8081 && react-native run-android",
+    "start": "npx react-native start --reset-cache",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+  },
+  "dependencies": {
+    "@react-native-picker/picker": "^2.2.0",
+    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/native-stack": "^6.2.5",
+    "@types/react-native-vector-icons": "^6.4.9",
+    "react": "17.0.2",
+    "react-native": "0.66.2",
+    "react-native-camera": "^4.2.1",
+    "react-native-qrcode-scanner": "^1.5.4",
+    "react-native-qrcode-svg": "^6.1.1",
+    "react-native-safe-area-context": "^3.3.2",
+    "react-native-screens": "^3.9.0",
+    "react-native-sunmi-inner-scanner": "^0.1.8",
+    "react-native-sunmi-v2-printer": "^1.0.1",
+    "react-native-svg": "^12.1.1",
+    "react-native-thermal-receipt-printer": "https://github.com/thiendangit/react-native-thermal-receipt-printer-Image-Qr.git",
+    "react-native-vector-icons": "^9.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.12.5",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/react-native": "^0.65.0",
+    "@types/react-test-renderer": "^17.0.1",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.14.0",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "^0.66.2",
+    "react-test-renderer": "17.0.2",
+    "typescript": "^3.8.3"
+  },
+  "resolutions": {
+    "@types/react": "^17"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}
