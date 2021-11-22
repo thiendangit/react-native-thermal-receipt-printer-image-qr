@@ -203,7 +203,6 @@ export const HomeScreen = ({route}: any) => {
     }
   };
 
-
   const gotoSunmi = async () => {
     navigate('Sunmi');
   };
