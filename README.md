@@ -6,7 +6,9 @@ Fork of `react-native-thermal-receipt-printer-image-qr` and add implement for pr
 - add this line to the dependencies of package.json
 ```
 react-native-thermal-receipt-printer-image-qr : "https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr.git"
-- yarn instal
+```
+```
+yarn install
 ```
 
 ## Troubleshoot
