@@ -1,4 +1,4 @@
-import { NativeModules, NativeEventEmitter, Platform } from "react-native";
+import {NativeModules, NativeEventEmitter, Platform} from "react-native";
 
 import * as EPToolkit from "./utils/EPToolkit";
 
@@ -61,10 +61,10 @@ const billTo64Buffer = (text: string, opts: PrinterOptions) => {
   return buffer.toString("base64");
 };
 
-const textPreprocessingIOS = (text: string) => {
+const textPreprocessingIOS = (text: string, canCut = true) => {
   let options = {
     beep: true,
-    cut: true,
+    cut: canCut,
   };
   return {
     text: text
@@ -126,6 +126,22 @@ export const USBPrinter = {
     RNUSBPrinter.printRawData(billTo64Buffer(text, opts), (error: Error) =>
       console.warn(error)
     ),
+  //image url
+  printImage: function (imgUrl: string, opts: PrinterOptions = {}) {
+    if (Platform.OS === "ios") {
+      RNNetPrinter.printImageData(imgUrl, opts, (error: Error) => console.warn(error));
+    } else {
+      RNNetPrinter.printImageData(imgUrl, (error: Error) => console.warn(error));
+    }
+  },
+  // base64string, except -> data:image/png;base64,
+  printQrCode: function (qrCodeBase64: string, opts: PrinterOptions = {}) {
+    if (Platform.OS === "ios") {
+      RNNetPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
+    } else {
+      RNNetPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+    }
+  },
 };
 
 export const BLEPrinter = {
@@ -162,7 +178,7 @@ export const BLEPrinter = {
 
   printText: (text: string, opts: PrinterOptions = {}): void => {
     if (Platform.OS === "ios") {
-      const processedText = textPreprocessingIOS(text);
+      const processedText = textPreprocessingIOS(text, false);
       RNBLEPrinter.printRawData(
         processedText.text,
         processedText.opts,
@@ -189,11 +205,22 @@ export const BLEPrinter = {
       );
     }
   },
-
-  // printImage: async (imagePath: string) => {
-  //   const tmp = await imageToBuffer(imagePath);
-  //   RNBLEPrinter.printRawData(tmp, (error: Error) => console.warn(error));
-  // },
+  //image url
+  printImage: function (imgUrl: string, opts: PrinterOptions = {}) {
+    if (Platform.OS === "ios") {
+      RNNetPrinter.printImageData(imgUrl, opts, (error: Error) => console.warn(error));
+    } else {
+      RNNetPrinter.printImageData(imgUrl, (error: Error) => console.warn(error));
+    }
+  },
+  // base64string, except -> data:image/png;base64,
+  printQrCode: function (qrCodeBase64: string, opts: PrinterOptions = {}) {
+    if (Platform.OS === "ios") {
+      RNNetPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
+    } else {
+      RNNetPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+    }
+  },
 };
 
 export const NetPrinter = {
@@ -231,7 +258,7 @@ export const NetPrinter = {
 
   printText: (text: string, opts = {}): void => {
     if (Platform.OS === "ios") {
-      const processedText = textPreprocessingIOS(text);
+      const processedText = textPreprocessingIOS(text, false);
       RNNetPrinter.printRawData(
         processedText.text,
         processedText.opts,
@@ -256,6 +283,22 @@ export const NetPrinter = {
       RNNetPrinter.printRawData(billTo64Buffer(text, opts), (error: Error) =>
         console.warn(error)
       );
+    }
+  },
+  //image url
+  printImage: function (imgUrl: string, opts: PrinterOptions = {}) {
+    if (Platform.OS === "ios") {
+      RNNetPrinter.printImageData(imgUrl, opts, (error: Error) => console.warn(error));
+    } else {
+      RNNetPrinter.printImageData(imgUrl, (error: Error) => console.warn(error));
+    }
+  },
+  // base64string, except -> data:image/png;base64,
+  printQrCode: function (qrCodeBase64: string, opts: PrinterOptions = {}) {
+    if (Platform.OS === "ios") {
+      RNNetPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
+    } else {
+      RNNetPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
     }
   },
 };

@@ -23,7 +23,9 @@ import Loading from '../Loading';
 import {DeviceType} from './FindPrinter';
 import {navigate} from './App';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import ThermalPrinterModule from './ThermalPrinterModule';
+import {Commands} from './utils';
+import QRCode from 'react-native-qrcode-svg';
+import {useRef} from 'react';
 
 const printerList: Record<string, any> = {
   ble: BLEPrinter,
@@ -45,15 +47,8 @@ export enum DevicesEnum {
 }
 
 const deviceWidth = Dimensions.get('window').width;
-// const deviceHeight = Dimensions.get('window').height;
 
 export const HomeScreen = ({route}: any) => {
-  // ThermalPrinterModule.defaultConfig = {
-  //   ...ThermalPrinterModule.defaultConfig,
-  //   ip: '192.168.0.200',
-  //   port: 9100,
-  // };
-
   const [selectedValue, setSelectedValue] = React.useState<keyof typeof printerList>(DevicesEnum.net);
   const [devices, setDevices] = React.useState([]);
   const [connected, setConnected] = React.useState(false);
@@ -61,6 +56,7 @@ export const HomeScreen = ({route}: any) => {
   const [selectedPrinter, setSelectedPrinter] = React.useState<SelectedPrinter>(
     {},
   );
+  let QrRef = useRef<any>(null);
   const [selectedNetPrinter, setSelectedNetPrinter] =
     React.useState<DeviceType>({
       device_name: 'My Net Printer',
@@ -148,7 +144,7 @@ export const HomeScreen = ({route}: any) => {
               console.log('connect -> status', status);
               Alert.alert(
                 'Connect successfully!',
-                `Connected to ${status.device_name} !`,
+                `Connected to ${status.device_name ?? 'Printers'} !`,
               );
               setConnected(true);
             } catch (err) {
@@ -188,36 +184,43 @@ export const HomeScreen = ({route}: any) => {
   };
 
   const handlePrintBill = async () => {
+    let address = "23 Acacia Avenue, Harrogate, Yorkshire, POSTCODE."
+    const BOLD_ON = Commands.TEXT_FORMAT.TXT_BOLD_ON;
+    const BOLD_OFF = Commands.TEXT_FORMAT.TXT_BOLD_OFF;
+    const CENTER = Commands.TEXT_FORMAT.TXT_ALIGN_CT;
+    const OFF_CENTER = Commands.TEXT_FORMAT.TXT_ALIGN_LT;
+    const TEXT_MAX_WIDTH = Commands.TEXT_FORMAT.TXT_WIDTH['3'];
     try {
-      const Printer = printerList[selectedValue];
-      Printer.printBill('<CB>Simon Supplier</CB>');
-      Printer.printBill('<C>32 Nguyễn Văn Linh, Phường Tân Quy, Quận 7, TP Hồ Chí Minh.</C>');
-      Printer.printBill('<C>090 3399 031</C>');
-      await Printer.printQrCode(
-        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANwAAADcCAMAAAAshD+zAAAABlBMVEX///8AAABVwtN+AAAAHGlET1QAAAACAAAAAAAAAG4AAAAoAAAAbgAAAG4AAASMOw2BmAAABFhJREFUeAHsmdFq5VYQBO3//+lADqgKUZcjpNU6xLNP5e7puVLPTWI2X99/6s9X/WF5uV/Y3/gSH6L3P1vF04lYKRHEnpdTF5dwLnetJr5tEEk0EfZ8LdXFJZyv5bWa9HU7kOQhGbDna6kuLuFv+Vr6+3KVVSCRFLHVp0RwF2cyyXE4Rzci6f6HJuOENrZ25mSKbP/e1Zh5RG861BQP92v3kbu4NhU6DtfkTiOtllPUJnyJILZ2Yu/IcXiXKp+0HiRFpfElgtjaib0jx+FdqnzSepAUlcaXCGJrJ/aOHId3qfJJ60FSVBpfIoitndg7chzepconrQdJUWl8iSC2dmLvyHF4lyqftB4kRaXxJYLY2om9I8fhXap80nqQFJXGlwhiayf2jhyHSaE15SSiiLzEDZLRy0lMZKfs/C+q/MTehAoRR9sRmXm51QWNuRs4fWxRTiKKCEncIJm53OqCwtwNnD62KCcRRYQkbpDMXG51QWHuBk4fW5STiCJCEjdIZi63uqAwdwOnjy3KSUQRIYkbJDOXW11QmLuB08cW5eRGxM5fitL+L14ua8inlwhmXGJixxlNH1uUkxsRey63qqQRVZuYk1ljxiX2pkPNycO991d72pnIetnzcirjX+yaDlXjh2bAt3ow9vzbcnVxVKOvYv91urpL7E2HqsyhGfCtHow9l1tdHNW8fTk+SKR7JDIqO0X5YE7qRdMnLspJxCTFEwnJTlE+mJPzchS0qGtCLTrvOP9MRk6K8sGcnMtR0KKuCbXovOP8Mxk5KcoHc3IuR0GLuibUovOO889k5KQoH8zJuRwFLeqaUIvOO84/k5GTonwwJ3/f5ahhR1T3+Jfc46Ny5+FuwXF4G4sB0vNyqwtK2nXD5HXyTvh6nknSc7nVxfVumLxO7hu+nmeS9FxuLpffBr4sO3Ic3qXKJz1fy9UFLe26YfI6eaf4GfLx2vNQ1KY7qN8t78SVefgeGdf6Ozgvd6m1rP6heOmDPw/N5T53I+fhkTKu9XdwLneptaz+oXjpgz8PzeU+dyPn4ZEyrvV38P99ORp7l3bNv/vpL2+fl3u54NfWz+Veq/blxXO5lwt+bf1c7rVqX178I5fbfWj59FBua2REOZr+LfHW75Z8Uj5dimREu0n8DO3EeTkKXERjZ+fzz2REOZ7+LXEudy6YGs/O55/JiHI8/VviXO5cMDWenc8/kxHlePq3xLncuWBqPDuffyYjyvH0b4m/5XIqB6RbNBVyXWRR/z9YbQIVKmRQpMF+UGYZRevMZhJ7Xm5VqUYK1Teowb5CjaJ1hqU5iT2XWwWpkUK1CGqwr1CjaJ1haU5iz+VWQWqkUC2CGuwr1ChaZ1iak9hzuVWQGilUi6AG+wo1itYZluYk9l+8nJ6kUM8EMoimR8ZWDZoEc1Ji4sO4drJJhJ8i9rzc6oKa1E1iTqaYcYmERPgpYs/lVhfUpG4SczLFjEskJMJPEfuHL/cPAAAA//+yMmARAAAFEUlEQVTtmsGKXDkQBO3//+nF2wMRh9hJ8aYbvKA5BZlZKb3SpTH+9ev7v9/1x4hcRJH8wkxKTKRIdoryExkSkUwR+5f8wkxKTKRIdoryExkSkUwR+37caxesSbtJzGSKOS6RIRF+ith/z8vposeY37FE+QO5h4KIix4NUZrjS5Q/cByE3aT2Dnyv5vgS5Q/kcAURFz0aojTHlyh/4DgIu0ntHfhezfElyh/I4QoiLno0RGmOL1H+wHEQdpPaO/C9muNLlD+QwxVEXPRoiNIcX6L8geMg7Ca1d+B7NceXKH8ghyuIuOjREKU5vkT5A8dB2E36gZQH5RRJ2SnKL2TmM8SZ2Y8tIrlE+YUUfYY4M/uxRSSXKL+Qos8QZ2Y/tojkEuUXUvQZ4szsxxaRXKL8Qoo+Q5yZ/dgikkuUX0jRZ4gzsx9bRHKJ8gsp+gxxZvZji0guUX4hRZ8hzsx+bBHJJcovpOgzxJnZjy0iuUT5hRR9hjgz+7FFJJcov5Ci/w3VZzzT+OScx9avSCXlvw1V/0PkSlmEfT9Ou3iOueVHInfIcez7ctrFc8wtPxK5Q45j35fTLp5jbvmRyB1yHPu+nHbxHHPLj0TukOPY//FyOfVE5CRNv02kqL+DM5VcUYYWUark20SK1o2VXFFddCClCr5NpGjdWMkV1UUHUqrg20SK1o2VXFFddCClCr5NpGjdWMkV1UUHUqrg20SK1o2VXFFddCClCr5NpGjdWMkV1UUHUqrg20SK1o2VXFFddCClCr5NpGjdWMkV1UUHUqrg20SK1o2VXFFddCClCr5NpGjdWElFrZ5yfoeG5T9BNYFZhG0iavWUmf6dI/Kf4HlnJu/L9Vr+qHqODMl/guedmdT12v9e1Y0zKP8Jnndm8n5cr+WPqufIkPwneN6ZSV2v/e9V3TiD8p/geWcm78f1Wv6oeo4MyX+C552Z1PXw1z0ymWI2ZRJRxLjEgcz8vh+nZfyL7E5OivLBTCKKakZ2IjP35bSLF7IxWSnKBzOJKKoZ2YnM3JfTLl7IxmSlKB/MJKKoZmQnMnNfTrt4IRuTlaJ8MJOIopqRncjMfTnt4oVsTFaK8sFMIopqRnYiM59+uTwe0RdBheQPZMbEECpaUyaHiC1SvVRQ/kBmTAyhojVlcojYItVLBeUPZMbEECpaUyaHiC1SvVRQ/kBmTAyhojVlcojYItVLBeUPZMbEECpaUyaHiC1SvVRQ/kBmTAyhojVlcojYItVLBeUPZMbEECpaUyaHiC1SvVRQ/kBmTAyhojVlcojYItVLBeUPZMbEECpaUyaHiC1SvVRQ/kBmTAyhojVl8lyklJn8txzZQsZF8oUEENGaMnkuUsrM/bjXLtiNSGsSEkBEa8rkuUgpM/flXrtgNyKtSUgAEa0pk+cipczcl3vtgt2ItCYhAUS0pkyei5Qyc1/utQt2I9KahAQQ0ZoyeS5Sysx9udcu2I1IaxISkHiMTOs/2aR4XOkgTVIRRfKFBCQeI9P3446X9hVkd5pEFMkXEpB4jEzflzte2leQ3WkSUSRfSEDiMTJ9X+54aV9BdqdJRJF8IQGJx8j0fbnjpX0F2Z0mEUXyhQQkHiPTf/nL6aJPkIXkNHb/jGRIyXPscdQfEhfJIuz7cdrFEbJQx1F/SJRmEfZ9Oe3iCFmo46g/JEqzCPu+nHZxhCzUcdQfEqVZhH1fTrs4QhbqOOoPidIswr4vp10cIQtV/B8HSmHoeVHwJgAAAABJRU5ErkJggg==',
-        {cut: false},
-      );
-      console.log(Printer);
+      // let qr = '';
+      const getDataURL = () => {
+        (QrRef as any).toDataURL(callback);
+      };
+      const callback = async (dataURL: string) => {
+        let qrProcessed = dataURL.replace(/(\r\n|\n|\r)/gm, "");
+        if (Platform.OS === 'ios' && qrProcessed) {
+          const Printer = printerList[selectedValue];
+          Printer.printImage(`https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg`);
+          Printer.printText(`${BOLD_ON}${CENTER} BILLING ${BOLD_OFF}`, {encoding: 'UTF-8'});
+          Printer.printText(`${CENTER}${TEXT_MAX_WIDTH}${address}${OFF_CENTER}`);
+          Printer.printText('<CD>090 3399 031 555</CD>\n');
+          Printer.printText(`${CENTER}-------------------------------${CENTER}`);
+          Printer.printQrCode(qrProcessed)
+          Printer.printBill(`${CENTER}Thank you\n`);
+        } else {
+
+        }
+      }
+      getDataURL();
     } catch (err) {
       console.warn(err);
     }
   };
 
   const gotoSunmi = async () => {
-    navigate('Sunmi');
-  };
-
-  const thermalPrinter = async () => {
-    try {
-      await ThermalPrinterModule.printUsb({
-        // ip: '192.168.0.200',
-        // port: 9100,
-        payload: 'hello world',
-        printerWidthMM: 50,
-      });
-    } catch (err) {
-      //error handling
-      // alert(JSON.stringify(err.message));
+    if (Platform.OS === 'ios') {
+      Alert.alert('this feature just support for sunmi devices');
+    } else {
+      navigate('Sunmi');
     }
   };
 
@@ -239,9 +242,11 @@ export const HomeScreen = ({route}: any) => {
 
   const _renderNet = () => (
     <>
+      <Text style={[styles.text, {color: 'black', marginLeft: 0}]}>Your printer ip....</Text >
       <TextInput
         style={{
           borderBottomWidth: 1,
+          height: 45
         }}
         placeholder={'Your printer port...'}
         value={selectedNetPrinter?.host}
@@ -345,15 +350,9 @@ export const HomeScreen = ({route}: any) => {
             <Text style={styles.text} >Sunmi print</Text >
           </TouchableOpacity >
         </View >
-        <View style={styles.buttonContainer} >
-          {/*<TouchableOpacity*/}
-          {/*  style={[styles.button, {backgroundColor: 'blue'}]}*/}
-          {/*  // disabled={!selectedPrinter?.device_name}*/}
-          {/*  onPress={thermalPrinter}>*/}
-          {/*  <AntIcon name={'printer'} color={'white'} size={18} />*/}
-          {/*  <Text style={styles.text}>Thermal Module print</Text>*/}
-          {/*</TouchableOpacity>*/}
-        </View >
+        <View style={styles.qr} >
+        <QRCode value="hey" getRef={(el: any) => (QrRef = el)} />
+        </View>
       </View >
       <Loading loading={loading} />
     </View >
@@ -384,7 +383,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: 'bold',
     marginLeft: 5,
   },
@@ -394,4 +393,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 5,
   },
+  qr: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20
+  }
 });

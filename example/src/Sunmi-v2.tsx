@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   DeviceEventEmitter,
   ScrollView,
-  Linking,
+  Linking, Alert,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 // @ts-ignore
@@ -136,14 +136,14 @@ const SunmiScreen = () => {
     <ScrollView
       style={{
         flex: 1,
-      }}>
-      <View style={styles.container}>
-        <Text>{`Printer Status: ${status}`}</Text>
-        <TouchableOpacity style={styles.button} onPress={() => print()}>
-          <Text style={styles.buttonText}>Print</Text>
-        </TouchableOpacity>
+      }} >
+      <View style={styles.container} >
+        <Text >{`Printer Status: ${status}`}</Text >
+        <TouchableOpacity style={styles.button} onPress={() => print()} >
+          <Text style={styles.buttonText} >Print</Text >
+        </TouchableOpacity >
         <QRCode value="hey" getRef={(el: React.ReactElement) => (QrRef = el)} />
-      </View>
+      </View >
       {/*<QRCodeScanner*/}
       {/*  onRead={onSuccess}*/}
       {/*  flashMode={RNCamera.Constants.FlashMode.auto as any}*/}
@@ -164,10 +164,10 @@ const SunmiScreen = () => {
       <SunmiScannerView
         style={{height: 400, width: 300}}
         onCodeScan={data => {
-          alert(JSON.stringify(data));
+          Alert.alert(JSON.stringify(data));
         }}
       />
-    </ScrollView>
+    </ScrollView >
   );
 };
 

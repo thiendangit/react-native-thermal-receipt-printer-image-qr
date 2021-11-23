@@ -1,3 +1,12 @@
+//
+//  RNNetPrinter.m
+//  RNThermalReceiptPrinter
+//
+//  Created by MTT on 06/11/19.
+//  Copyright © 2019 Facebook. All rights reserved.
+//
+
+
 #import "RNNetPrinter.h"
 #import "PrinterSDK.h"
 #include <ifaddrs.h>
@@ -154,7 +163,7 @@ RCT_EXPORT_METHOD(printRawData:(NSString *)text
 
         // [[PrinterSDK defaultPrinterSDK] printTestPaper];
         [[PrinterSDK defaultPrinterSDK] printText:text];
-        beep ? [[PrinterSDK defaultPrinterSDK] beep] : nil;
+//        beep ? [[PrinterSDK defaultPrinterSDK] beep] : nil;
         cut ? [[PrinterSDK defaultPrinterSDK] cutPaper] : nil;
     } @catch (NSException *exception) {
         errorCallback(@[exception.reason]);
@@ -197,28 +206,26 @@ RCT_EXPORT_METHOD(printQrCode:(NSString *)base64Qr
     @try {
 
         !connected_ip ? [NSException raise:@"Invalid connection" format:@"Can't connect to printer"] : nil;
+        if(![base64Qr  isEqual: @""]){
+            NSString *result = [@"data:image/png;base64," stringByAppendingString:base64Qr];
+            NSURL *url = [NSURL URLWithString:result];
+            NSData *imageData = [NSData dataWithContentsOfURL:url];
+            NSString* printerWidthType = [options valueForKey:@"printerWidthType"];
 
-        NSURL *url = [NSURL URLWithString:base64Qr];
-        NSData *imageData = [NSData dataWithContentsOfURL:url];
-        NSString* printerWidthType = [options valueForKey:@"printerWidthType"];
+            NSInteger printerWidth = 576;
 
-        NSInteger printerWidth = 576;
+            if(printerWidthType != nil && [printerWidthType isEqualToString:@"58"]) {
+                printerWidth = 384;
+            }
 
-        if(printerWidthType != nil && [printerWidthType isEqualToString:@"58"]) {
-            printerWidth = 384;
+            if(imageData != nil){
+                UIImage* image = [UIImage imageWithData:imageData];
+                UIImage* printImage = [self getPrintImage:image printerOptions:options];
+
+                [[PrinterSDK defaultPrinterSDK] setPrintWidth:printerWidth];
+                [[PrinterSDK defaultPrinterSDK] printImage:printImage ];
+            }
         }
-
-        NSLog(@"%@", imageData);
-        NSLog(@"%@", base64Qr);
-
-        if(imageData != nil){
-            UIImage* image = [UIImage imageWithData:imageData];
-            UIImage* printImage = [self getPrintImage:image printerOptions:options];
-
-            [[PrinterSDK defaultPrinterSDK] setPrintWidth:printerWidth];
-            [[PrinterSDK defaultPrinterSDK] printImage:printImage ];
-        }
-
     } @catch (NSException *exception) {
         errorCallback(@[exception.reason]);
     }
@@ -294,3 +301,4 @@ RCT_EXPORT_METHOD(closeConn) {
 }
 
 @end
+
