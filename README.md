@@ -2,6 +2,11 @@
 
 Fork of `react-native-thermal-receipt-printer-image-qr` and add implement for print image,qr code with Net
 
+<div style="display: flex; flex-direction: row; align-self: center; align-items: center">
+<img src="image/bill.jpg" alt="bill" width="250" height="580"/>
+<img src="image/screenshot.jpg" alt="screenshot" width="250" height="580"/>
+</div>
+
 ## Installation
 - add this line to the dependencies of package.json
 ```
