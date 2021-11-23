@@ -21,7 +21,7 @@ export const App = () => {
           name="Home"
           component={HomeScreen}
           options={{
-            headerTitle: 'ODA Printer Demo',
+            headerTitle: 'Printer Demo',
           }}
         />
         <Stack.Screen

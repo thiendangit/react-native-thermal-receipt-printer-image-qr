@@ -252,6 +252,9 @@ _Note:_ get list device for net printers is support scanning in local ip but not
   printTextTest = () => {
     if (this.state.currentPrinter) {
       NetPrinter.printText("<C>sample text</C>\n");
+      NetPrinter.printImage("https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg");
+      NetPrinter.printQrCode("your qr base64");
+      NetPrinter.printBill("<C>thank you</C>\n");
     }
   }
 
@@ -259,7 +262,7 @@ _Note:_ get list device for net printers is support scanning in local ip but not
     if(this.state.currentPrinter) {
       NetPrinter.printBill("<C>sample bill</C>");
     }
-  }
+  };
 
   ...
 
