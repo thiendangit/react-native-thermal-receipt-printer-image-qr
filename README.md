@@ -101,7 +101,7 @@ import {
   USBPrinter,
   NetPrinter,
   BLEPrinter,
-} from "react-native-thermal-receipt-printer";
+} from "react-native-thermal-receipt-printer-image-qr";
 
 USBPrinter.printText("<C>sample text</C>");
 USBPrinter.printBill("<C>sample bill</C>");
