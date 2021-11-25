@@ -47,6 +47,7 @@ export enum DevicesEnum {
 }
 
 const deviceWidth = Dimensions.get('window').width;
+const EscPosEncoder = require('esc-pos-encoder');
 
 export const HomeScreen = ({route}: any) => {
   const [selectedValue, setSelectedValue] = React.useState<keyof typeof printerList>(DevicesEnum.net);
@@ -66,7 +67,6 @@ export const HomeScreen = ({route}: any) => {
     });
 
   React.useEffect(() => {
-    // console.log(route.params?.printer);
     if (route.params?.printer) {
       setSelectedNetPrinter({
         ...selectedNetPrinter,
@@ -138,6 +138,7 @@ export const HomeScreen = ({route}: any) => {
               // }
               const status = await NetPrinter.connectPrinter(
                 selectedNetPrinter?.host || '',
+                // @ts-ignore
                 handlePort(selectedNetPrinter?.port),
               );
               setLoading(false);
@@ -176,8 +177,11 @@ export const HomeScreen = ({route}: any) => {
   const handlePrint = async () => {
     try {
       const Printer = printerList[selectedValue];
-      Printer.printText('<C>sample text</C>');
-      Printer.printText('<C>sample text</C>');
+      Printer.printText('<C>sample text</C>', {
+        cut: false
+      });
+      Printer.printImage('https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg');
+      Printer.printBill('<C>sample text</C>');
     } catch (err) {
       console.warn(err);
     }
@@ -191,7 +195,6 @@ export const HomeScreen = ({route}: any) => {
     const OFF_CENTER = Commands.TEXT_FORMAT.TXT_ALIGN_LT;
     const TEXT_MAX_WIDTH = Commands.TEXT_FORMAT.TXT_WIDTH['3'];
     try {
-      // let qr = '';
       const getDataURL = () => {
         (QrRef as any).toDataURL(callback);
       };
@@ -207,7 +210,16 @@ export const HomeScreen = ({route}: any) => {
           Printer.printQrCode(qrProcessed)
           Printer.printBill(`${CENTER}Thank you\n`);
         } else {
-
+          const Printer = printerList[selectedValue];
+          let encoder = new EscPosEncoder();
+          var newLine = '\x0A\x0A\x0A\x0A\x0A\x0A\x1B\x69';
+          var cmds = '!' + '\x38'
+          cmds += 'ABDUL'; //text to print
+          cmds += newLine; //text to print
+          // Printer.printText(`${BOLD_ON}${CENTER} BILLING ${BOLD_OFF}`, {encoding: 'UTF-8'});
+          Printer.printText(cmds);
+          // Printer.printQrCode(qrProcessed);
+          // Printer.printBill(`${CENTER}Thank you\n`);
         }
       }
       getDataURL();
@@ -242,7 +254,7 @@ export const HomeScreen = ({route}: any) => {
 
   const _renderNet = () => (
     <>
-      <Text style={[styles.text, {color: 'black', marginLeft: 0}]}>Your printer ip....</Text >
+      <Text style={[styles.text, {color: 'black', marginLeft: 0}]} >Your printer ip....</Text >
       <TextInput
         style={{
           borderBottomWidth: 1,
@@ -307,7 +319,7 @@ export const HomeScreen = ({route}: any) => {
       {/* Printers List */}
       <View style={styles.section} >
         {selectedValue === 'net' ? _renderNet() : _renderOther()}
-        {/* Buttons  */}
+        {/* Buttons */}
         <View
           style={[
             styles.buttonContainer,
@@ -351,8 +363,8 @@ export const HomeScreen = ({route}: any) => {
           </TouchableOpacity >
         </View >
         <View style={styles.qr} >
-        <QRCode value="hey" getRef={(el: any) => (QrRef = el)} />
-        </View>
+          <QRCode value="hey" getRef={(el: any) => (QrRef = el)} />
+        </View >
       </View >
       <Loading loading={loading} />
     </View >

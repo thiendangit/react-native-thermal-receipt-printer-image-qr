@@ -15,8 +15,8 @@ export const App = () => {
   const Stack = createNativeStackNavigator();
 
   return (
-    <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator initialRouteName="Home">
+    <NavigationContainer ref={navigationRef} >
+      <Stack.Navigator initialRouteName="Home" >
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -38,7 +38,7 @@ export const App = () => {
           }}
           component={SunmiScreen}
         />
-      </Stack.Navigator>
-    </NavigationContainer>
+      </Stack.Navigator >
+    </NavigationContainer >
   );
 };
