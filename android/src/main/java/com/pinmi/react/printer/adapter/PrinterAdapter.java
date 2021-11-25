@@ -2,6 +2,7 @@ package com.pinmi.react.printer.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.telecom.Call;
 
 import com.facebook.react.bridge.Callback;
@@ -27,4 +28,6 @@ public interface PrinterAdapter {
     public void printRawData(String rawBase64Data, Callback errorCallback);
 
     public void printImageData(String imageUrl, Callback errorCallback);
+
+    public void printQrCode(Bitmap imageUrl, Callback errorCallback);
 }

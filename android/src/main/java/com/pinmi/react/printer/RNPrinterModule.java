@@ -1,6 +1,7 @@
 package com.pinmi.react.printer;
 
 
+import android.graphics.Bitmap;
 import android.hardware.usb.UsbDevice;
 
 import com.facebook.react.bridge.Arguments;
@@ -37,5 +38,7 @@ public interface RNPrinterModule {
     @ReactMethod
     public void printImageData(String imageUrl, Callback errorCallback) ;
 
+    @ReactMethod
+    public void printQrCode(String imageUrl, Callback errorCallback) ;
 }
 

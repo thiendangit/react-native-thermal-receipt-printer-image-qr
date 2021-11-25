@@ -26,6 +26,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import {Commands} from './utils';
 import QRCode from 'react-native-qrcode-svg';
 import {useRef} from 'react';
+import {Buffer} from 'buffer';
 
 const printerList: Record<string, any> = {
   ble: BLEPrinter,
@@ -47,7 +48,7 @@ export enum DevicesEnum {
 }
 
 const deviceWidth = Dimensions.get('window').width;
-const EscPosEncoder = require('esc-pos-encoder');
+const EscPosEncoder = require('esc-pos-encoder')
 
 export const HomeScreen = ({route}: any) => {
   const [selectedValue, setSelectedValue] = React.useState<keyof typeof printerList>(DevicesEnum.net);
@@ -200,7 +201,8 @@ export const HomeScreen = ({route}: any) => {
       };
       const callback = async (dataURL: string) => {
         let qrProcessed = dataURL.replace(/(\r\n|\n|\r)/gm, "");
-        if (Platform.OS === 'ios' && qrProcessed) {
+        // Can print android and ios with the same type or with encoder for android
+        if (Platform.OS === 'ios') {
           const Printer = printerList[selectedValue];
           Printer.printImage(`https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg`);
           Printer.printText(`${BOLD_ON}${CENTER} BILLING ${BOLD_OFF}`, {encoding: 'UTF-8'});
@@ -210,16 +212,20 @@ export const HomeScreen = ({route}: any) => {
           Printer.printQrCode(qrProcessed)
           Printer.printBill(`${CENTER}Thank you\n`);
         } else {
+          // android
           const Printer = printerList[selectedValue];
-          let encoder = new EscPosEncoder();
-          var newLine = '\x0A\x0A\x0A\x0A\x0A\x0A\x1B\x69';
-          var cmds = '!' + '\x38'
-          cmds += 'ABDUL'; //text to print
-          cmds += newLine; //text to print
-          // Printer.printText(`${BOLD_ON}${CENTER} BILLING ${BOLD_OFF}`, {encoding: 'UTF-8'});
-          Printer.printText(cmds);
-          // Printer.printQrCode(qrProcessed);
-          // Printer.printBill(`${CENTER}Thank you\n`);
+          const encoder = new EscPosEncoder();
+          let _encoder = encoder
+            .initialize()
+            .align('center')
+            .line('BILLING')
+            .line('address')
+            .line('Website: www.google.com.vn')
+            // qr code
+            .qrcode('hello!')
+            .encode();
+          let base64String = Buffer.from(_encoder).toString('base64');
+          Printer.printRaw(base64String);
         }
       }
       getDataURL();

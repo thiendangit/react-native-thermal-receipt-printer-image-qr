@@ -1,5 +1,9 @@
 package com.pinmi.react.printer;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -68,6 +72,15 @@ public class RNUSBPrinterModule extends ReactContextBaseJavaModule implements RN
         adapter.printImageData(imageUrl, errorCallback);
     }
 
+    @ReactMethod
+    @Override
+    public void printQrCode(String imageUrl, Callback errorCallback) {
+        // String imageBase64 = "data:image/png;base64," + imageUrl;
+        // String base64ImageProcessed = imageUrl.split(",")[1];
+        byte[] decodedString = Base64.decode(imageUrl, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        adapter.printQrCode(decodedByte, errorCallback);
+    }
 
     @ReactMethod
     public void connectPrinter(Integer vendorId, Integer productId, Callback successCallback, Callback errorCallback) {

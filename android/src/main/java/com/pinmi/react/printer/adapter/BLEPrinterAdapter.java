@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -187,6 +188,11 @@ public class BLEPrinterAdapter implements PrinterAdapter{
 
     @Override
     public void printImageData(String imageUrl, Callback errorCallback) {
+
+    }
+
+    @Override
+    public void printQrCode(Bitmap imageUrl, Callback errorCallback) {
 
     }
 }

@@ -112,6 +112,16 @@ export var USBPrinter = {
             RNNetPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
         }
     },
+    // android print with encoder
+    printRaw: function (text) {
+        if (Platform.OS === "ios") {
+        }
+        else {
+            RNNetPrinter.printRawData(text, function (error) {
+                return console.warn(error);
+            });
+        }
+    },
 };
 export var BLEPrinter = {
     init: function () {
@@ -166,7 +176,7 @@ export var BLEPrinter = {
             RNNetPrinter.printImageData(imgUrl, opts, function (error) { return console.warn(error); });
         }
         else {
-            RNNetPrinter.printImageData(imgUrl, function (error) { return console.warn(error); });
+            // RNNetPrinter.printImageData(imgUrl, (error: Error) => console.warn(error));
         }
     },
     // base64string, except -> data:image/png;base64,
@@ -176,7 +186,17 @@ export var BLEPrinter = {
             RNNetPrinter.printQrCode(qrCodeBase64, opts, function (error) { return console.warn(error); });
         }
         else {
-            RNNetPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
+            // RNNetPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+        }
+    },
+    // android print with encoder
+    printRaw: function (text) {
+        if (Platform.OS === "ios") {
+        }
+        else {
+            RNNetPrinter.printRawData(text, function (error) {
+                return console.warn(error);
+            });
         }
     },
 };
@@ -244,6 +264,16 @@ export var NetPrinter = {
         }
         else {
             RNNetPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
+        }
+    },
+    // android print with encoder
+    printRaw: function (text) {
+        if (Platform.OS === "ios") {
+        }
+        else {
+            RNNetPrinter.printRawData(text, function (error) {
+                return console.warn(error);
+            });
         }
     },
 };
