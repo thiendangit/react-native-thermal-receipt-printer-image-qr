@@ -1,6 +1,7 @@
 # react-native-thermal-receipt-printer-image-qr
 
-Fork of `react-native-thermal-receipt-printer` and add implement for print image,qr code with Net,
+Fork of `react-native-thermal-receipt-printer` and add implement for print image,qr code with NET, USB.
+I fork this for my quickly project print with NET(android & ios) and USB(android),
 - IOS : :heavy_check_mark:
 - ANDROID: :heavy_check_mark:
 
