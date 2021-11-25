@@ -1,8 +1,8 @@
 # react-native-thermal-receipt-printer-image-qr
 
-Fork of `react-native-thermal-receipt-printer` and add implement for print image,qr code with Net, 
+Fork of `react-native-thermal-receipt-printer` and add implement for print image,qr code with Net,
 - IOS : :heavy_check_mark:
-- ANDROID: Developing
+- ANDROID: :heavy_check_mark:
 
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
 <img src="image/bill.jpg" alt="bill" width="250" height="580"/>
@@ -237,6 +237,8 @@ interface INetPrinter {
 _Note:_ get list device for net printers is support scanning in local ip but not recommended
 
 ```javascript
+  const EscPosEncoder = require('esc-pos-encoder')
+  import {Buffer} from 'buffer';
 
   componentDidMount = () => {
     NetPrinter.init().then(() => {
@@ -262,7 +264,22 @@ _Note:_ get list device for net printers is support scanning in local ip but not
 
   printBillTest = () => {
     if(this.state.currentPrinter) {
-      NetPrinter.printBill("<C>sample bill</C>");
+        if(Platform.OS === 'ios'){
+            NetPrinter.printBill("<C>sample bill</C>");
+        } else  {
+            const encoder = new EscPosEncoder();
+            let _encoder = encoder
+                .initialize()
+                .align('center')
+                .line('BILLING')
+                .line('address')
+                .line('Website: www.google.com.vn')
+                // qr code
+                .qrcode('hello!')
+                .encode();
+            let base64String = Buffer.from(_encoder).toString('base64');
+            Printer.printRaw(base64String);
+        }
     }
   };
 
