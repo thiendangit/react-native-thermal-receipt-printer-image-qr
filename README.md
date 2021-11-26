@@ -5,6 +5,7 @@ Fork of `react-native-thermal-receipt-printer` and add implement for print image
 I fork this for my quickly project print with NET(android & ios) and USB(android).
 - IOS : :heavy_check_mark:
 - ANDROID: :heavy_check_mark:
+- fix cut
 
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
 <img src="image/bill.jpg" alt="bill" width="250" height="580"/>
