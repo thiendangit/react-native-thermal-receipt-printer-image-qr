@@ -1,11 +1,12 @@
 # react-native-thermal-receipt-printer-image-qr
 
-Fork of `react-native-thermal-receipt-printer` and add implement for print image,qr code with NET, USB.
-
-I fork this for my quickly project print with NET(android & ios) and USB(android).
-- IOS : :heavy_check_mark:
-- ANDROID: :heavy_check_mark:
-- fix cut
+- I fork this for my quickly project print with NET(android & ios) and USB(android).
+Bluetooth is not implement. Just using old structure (ios & android).
+- Fork of `react-native-thermal-receipt-printer` and add implement :
+    + Ios : :heavy_check_mark:
+    + Android : :heavy_check_mark:
+    + Fix cut : :heavy_check_mark:
+    + Print With Column : :heavy_check_mark:
 
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
 <img src="image/bill.jpg" alt="bill" width="250" height="580"/>
@@ -108,6 +109,17 @@ import {
 
 USBPrinter.printText("<C>sample text</C>");
 USBPrinter.printBill("<C>sample bill</C>");
+let orderList = [
+    ["1. Skirt Palas Labuh Muslimah Fashion", "x2", "500$"],
+    ["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4", "500$"],
+    ["3. Women Crew Neck Button Down Ruffle Collar Loose Blouse", "x1", "3000$"],
+    ["4. Retro Buttons Up Full Sleeve Loose", "x10", "200$"],
+];
+let columnAliment = [ColumnAliment.LEFT, ColumnAliment.CENTER, ColumnAliment.RIGHT];
+let columnWidth = [46 - (7 + 12), 7, 12]
+for (let i in orderList) {
+    USBPrinter.printColumnsText(orderList[i], columnWidth, columnAliment);
+}
 ```
 
 ## Example
@@ -260,6 +272,17 @@ _Note:_ get list device for net printers is support scanning in local ip but not
     if (this.state.currentPrinter) {
       NetPrinter.printText("<C>sample text</C>\n");
       NetPrinter.printImage("https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg");
+        let orderList = [
+            ["1. Skirt Palas Labuh Muslimah Fashion", "x2", "500$"],
+            ["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4", "500$"],
+            ["3. Women Crew Neck Button Down Ruffle Collar Loose Blouse", "x1", "3000$"],
+            ["4. Retro Buttons Up Full Sleeve Loose", "x10", "200$"],
+        ];
+        let columnAliment = [ColumnAliment.LEFT, ColumnAliment.CENTER, ColumnAliment.RIGHT];
+        let columnWidth = [46 - (7 + 12), 7, 12]
+        for (let i in orderList) {
+            NetPrinter.printColumnsText(orderList[i], columnWidth, columnAliment);
+        }
       NetPrinter.printQrCode("your qr base64");
       NetPrinter.printBill("<C>thank you</C>\n");
     }

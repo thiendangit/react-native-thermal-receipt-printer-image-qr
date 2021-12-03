@@ -181,10 +181,10 @@ RCT_EXPORT_METHOD(printImageData:(NSString *)imgUrl
 
         NSString* printerWidthType = [options valueForKey:@"printerWidthType"];
 
-        NSInteger printerWidth = 576;
+        NSInteger printerWidth = 400;
 
         if(printerWidthType != nil && [printerWidthType isEqualToString:@"58"]) {
-            printerWidth = 384;
+            printerWidth = 300;
         }
 
         if(imageData != nil){
@@ -212,10 +212,10 @@ RCT_EXPORT_METHOD(printQrCode:(NSString *)base64Qr
             NSData *imageData = [NSData dataWithContentsOfURL:url];
             NSString* printerWidthType = [options valueForKey:@"printerWidthType"];
 
-            NSInteger printerWidth = 576;
+            NSInteger printerWidth = 400;
 
             if(printerWidthType != nil && [printerWidthType isEqualToString:@"58"]) {
-                printerWidth = 384;
+                printerWidth = 300;
             }
 
             if(imageData != nil){
@@ -301,4 +301,3 @@ RCT_EXPORT_METHOD(closeConn) {
 }
 
 @end
-

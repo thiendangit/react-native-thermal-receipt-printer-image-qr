@@ -78,13 +78,13 @@ export function exchange_text(text, options) {
                 }
                 break;
             case "\n":
-                temp = "" + temp + ch;
+                temp = "".concat(temp).concat(ch);
                 bytes.concat(iconv.encode(temp, m_options.encoding));
                 bytes.concat(reset_bytes);
                 temp = "";
                 break;
             default:
-                temp = "" + temp + ch;
+                temp = "".concat(temp).concat(ch);
                 break;
         }
     }

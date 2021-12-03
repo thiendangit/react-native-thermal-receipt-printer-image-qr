@@ -11,9 +11,16 @@ var __assign = (this && this.__assign) || function () {
 };
 import { NativeModules, NativeEventEmitter, Platform } from "react-native";
 import * as EPToolkit from "./utils/EPToolkit";
+import { processColumnText } from './utils/print-column';
 var RNUSBPrinter = NativeModules.RNUSBPrinter;
 var RNBLEPrinter = NativeModules.RNBLEPrinter;
 var RNNetPrinter = NativeModules.RNNetPrinter;
+export var ColumnAliment;
+(function (ColumnAliment) {
+    ColumnAliment[ColumnAliment["LEFT"] = 0] = "LEFT";
+    ColumnAliment[ColumnAliment["CENTER"] = 1] = "CENTER";
+    ColumnAliment[ColumnAliment["RIGHT"] = 2] = "RIGHT";
+})(ColumnAliment || (ColumnAliment = {}));
 var textTo64Buffer = function (text, opts) {
     var defaultOptions = {
         beep: false,
@@ -22,7 +29,8 @@ var textTo64Buffer = function (text, opts) {
         encoding: "UTF8",
     };
     var options = __assign(__assign({}, defaultOptions), opts);
-    var buffer = EPToolkit.exchange_text(text, options);
+    var fixAndroid = '\n';
+    var buffer = EPToolkit.exchange_text(text + fixAndroid, options);
     return buffer.toString("base64");
 };
 var billTo64Buffer = function (text, opts) {
@@ -96,20 +104,20 @@ export var USBPrinter = {
     printImage: function (imgUrl, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            RNNetPrinter.printImageData(imgUrl, opts, function (error) { return console.warn(error); });
+            RNUSBPrinter.printImageData(imgUrl, opts, function (error) { return console.warn(error); });
         }
         else {
-            RNNetPrinter.printImageData(imgUrl, function (error) { return console.warn(error); });
+            RNUSBPrinter.printImageData(imgUrl, function (error) { return console.warn(error); });
         }
     },
     // base64string, except -> data:image/png;base64,
     printQrCode: function (qrCodeBase64, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            RNNetPrinter.printQrCode(qrCodeBase64, opts, function (error) { return console.warn(error); });
+            RNUSBPrinter.printQrCode(qrCodeBase64, opts, function (error) { return console.warn(error); });
         }
         else {
-            RNNetPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
+            RNUSBPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
         }
     },
     // android print with encoder
@@ -117,10 +125,17 @@ export var USBPrinter = {
         if (Platform.OS === "ios") {
         }
         else {
-            RNNetPrinter.printRawData(text, function (error) {
+            RNUSBPrinter.printRawData(text, function (error) {
                 return console.warn(error);
             });
         }
+    },
+    printColumnsText: function (texts, columnWidth, columnAliment, opts) {
+        if (opts === void 0) { opts = {}; }
+        var result = processColumnText(texts, columnWidth, columnAliment);
+        RNUSBPrinter.printRawData(textTo64Buffer(result, opts), function (error) {
+            return console.warn(error);
+        });
     },
 };
 export var BLEPrinter = {
@@ -173,7 +188,7 @@ export var BLEPrinter = {
     printImage: function (imgUrl, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            RNNetPrinter.printImageData(imgUrl, opts, function (error) { return console.warn(error); });
+            RNBLEPrinter.printImageData(imgUrl, opts, function (error) { return console.warn(error); });
         }
         else {
             // RNNetPrinter.printImageData(imgUrl, (error: Error) => console.warn(error));
@@ -183,7 +198,7 @@ export var BLEPrinter = {
     printQrCode: function (qrCodeBase64, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            RNNetPrinter.printQrCode(qrCodeBase64, opts, function (error) { return console.warn(error); });
+            RNBLEPrinter.printQrCode(qrCodeBase64, opts, function (error) { return console.warn(error); });
         }
         else {
             // RNNetPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
@@ -194,7 +209,20 @@ export var BLEPrinter = {
         if (Platform.OS === "ios") {
         }
         else {
-            RNNetPrinter.printRawData(text, function (error) {
+            RNBLEPrinter.printRawData(text, function (error) {
+                return console.warn(error);
+            });
+        }
+    },
+    printColumnsText: function (texts, columnWidth, columnAliment, opts) {
+        if (opts === void 0) { opts = {}; }
+        var result = processColumnText(texts, columnWidth, columnAliment);
+        if (Platform.OS === "ios") {
+            var processedText = textPreprocessingIOS(result, false);
+            RNBLEPrinter.printRawData(processedText.text, processedText.opts, function (error) { return console.warn(error); });
+        }
+        else {
+            RNBLEPrinter.printRawData(textTo64Buffer(result, opts), function (error) {
                 return console.warn(error);
             });
         }
@@ -272,6 +300,24 @@ export var NetPrinter = {
         }
         else {
             RNNetPrinter.printRawData(text, function (error) {
+                return console.warn(error);
+            });
+        }
+    },
+    /**
+     * `columnWidth`
+     * 80mm => 46 character
+     * 58mm => ...
+     */
+    printColumnsText: function (texts, columnWidth, columnAliment, opts) {
+        if (opts === void 0) { opts = {}; }
+        var result = processColumnText(texts, columnWidth, columnAliment);
+        if (Platform.OS === "ios") {
+            var processedText = textPreprocessingIOS(result, false);
+            RNNetPrinter.printRawData(processedText.text, processedText.opts, function (error) { return console.warn(error); });
+        }
+        else {
+            RNNetPrinter.printRawData(textTo64Buffer(result, opts), function (error) {
                 return console.warn(error);
             });
         }
