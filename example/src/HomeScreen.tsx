@@ -18,6 +18,7 @@ import {
   IUSBPrinter,
   IBLEPrinter,
   INetPrinter,
+  ColumnAliment
 } from 'react-native-thermal-receipt-printer-image-gr';
 import Loading from '../Loading';
 import {DeviceType} from './FindPrinter';
@@ -53,7 +54,7 @@ const EscPosEncoder = require('esc-pos-encoder')
 export const HomeScreen = ({route}: any) => {
   const [selectedValue, setSelectedValue] = React.useState<keyof typeof printerList>(DevicesEnum.net);
   const [devices, setDevices] = React.useState([]);
-  const [connected, setConnected] = React.useState(false);
+  // const [connected, setConnected] = React.useState(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [selectedPrinter, setSelectedPrinter] = React.useState<SelectedPrinter>(
     {},
@@ -148,7 +149,7 @@ export const HomeScreen = ({route}: any) => {
                 'Connect successfully!',
                 `Connected to ${status.device_name ?? 'Printers'} !`,
               );
-              setConnected(true);
+              // setConnected(true);
             } catch (err) {
               Alert.alert('Connect failed!', `${err} !`);
               console.log(err);
@@ -170,9 +171,7 @@ export const HomeScreen = ({route}: any) => {
         setLoading(false);
       }
     };
-    // requestAnimationFrame(async () => {
     await connect();
-    // });
   };
 
   const handlePrint = async () => {
@@ -189,12 +188,11 @@ export const HomeScreen = ({route}: any) => {
   };
 
   const handlePrintBill = async () => {
-    let address = "23 Acacia Avenue, Harrogate, Yorkshire, POSTCODE."
+    let address = "2700 S Grand Ave, Los Angeles, CA 90007, USAUSAUSAUSAUSA."
     const BOLD_ON = Commands.TEXT_FORMAT.TXT_BOLD_ON;
     const BOLD_OFF = Commands.TEXT_FORMAT.TXT_BOLD_OFF;
     const CENTER = Commands.TEXT_FORMAT.TXT_ALIGN_CT;
     const OFF_CENTER = Commands.TEXT_FORMAT.TXT_ALIGN_LT;
-    const TEXT_MAX_WIDTH = Commands.TEXT_FORMAT.TXT_WIDTH['3'];
     try {
       const getDataURL = () => {
         (QrRef as any).toDataURL(callback);
@@ -203,15 +201,14 @@ export const HomeScreen = ({route}: any) => {
         let qrProcessed = dataURL.replace(/(\r\n|\n|\r)/gm, "");
         // Can print android and ios with the same type or with encoder for android
         if (Platform.OS === 'android' || Platform.OS === 'ios') {
-          const Printer = printerList[selectedValue];
-          // Printer.printImage(`https://www.withvector.com/hubfs/Imported_Blog_Media/5e74f12bbdaffffb1aca2d45_Managing%20Fuel%20Receipts%20within%20a%20Business.png`);
-          // Printer.printText(`${BOLD_ON}${CENTER} BILLING ${BOLD_OFF}`, {encoding: 'UTF-8'});
-          // Printer.printText(`${CENTER}${TEXT_MAX_WIDTH}${address}${OFF_CENTER}`);
-          // Printer.printText('<CD>090 3399 031 555</CD>\n');
-          // Printer.printText(`${CENTER}-------------------------------${CENTER}`);
-          /**
-           * 80mm => 46 char
-           */
+          const Printer: typeof NetPrinter = printerList[selectedValue];
+          Printer.printImage(`https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg`);
+          Printer.printText(`${CENTER}${BOLD_ON} BILLING ${BOLD_OFF}\n`);
+          Printer.printText(`${CENTER}${address}${OFF_CENTER}`);
+          Printer.printText('090 3399 031 555\n');
+          Printer.printText(`Date : 15- 09 - 2021 /15 : 29 : 57 / Admin`);
+          Printer.printText(`Product : Total - 4 / No. (1,2,3,4)\n`);
+          Printer.printText(`${CENTER}-------------------------------${CENTER}\n`);
           let orderList = [
             ["1. Skirt Palas Labuh Muslimah Fashion", "x2", "500$"],
             ["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4", "500$"],
@@ -221,13 +218,15 @@ export const HomeScreen = ({route}: any) => {
           let columnAliment = [ColumnAliment.LEFT, ColumnAliment.CENTER, ColumnAliment.RIGHT];
           let columnWidth = [46 - (7 + 12), 7, 12]
           for (let i in orderList) {
-            const result = await printColumnsText(orderList[i], columnWidth, columnAliment);
-            Printer.printText(`${result}` + '\n_');
+            Printer.printColumnsText(orderList[i], columnWidth, columnAliment);
           }
-          // Printer.printText(`${result}` + '\n_');
-          // Printer.printQrCode(qrProcessed)
+          Printer.printQrCode(qrProcessed, {
+            // ios
+            imageWidth: 100
+          })
           Printer.printBill(`${CENTER}Thank you\n`);
         } else {
+          // optional for android
           // android
           const Printer = printerList[selectedValue];
           const encoder = new EscPosEncoder();
