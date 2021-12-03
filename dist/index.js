@@ -11,9 +11,16 @@ var __assign = (this && this.__assign) || function () {
 };
 import { NativeModules, NativeEventEmitter, Platform } from "react-native";
 import * as EPToolkit from "./utils/EPToolkit";
+import { processColumnText } from './utils/print-column';
 var RNUSBPrinter = NativeModules.RNUSBPrinter;
 var RNBLEPrinter = NativeModules.RNBLEPrinter;
 var RNNetPrinter = NativeModules.RNNetPrinter;
+export var ColumnAliment;
+(function (ColumnAliment) {
+    ColumnAliment[ColumnAliment["LEFT"] = 0] = "LEFT";
+    ColumnAliment[ColumnAliment["CENTER"] = 1] = "CENTER";
+    ColumnAliment[ColumnAliment["RIGHT"] = 2] = "RIGHT";
+})(ColumnAliment || (ColumnAliment = {}));
 var textTo64Buffer = function (text, opts) {
     var defaultOptions = {
         beep: false,
@@ -122,6 +129,16 @@ export var USBPrinter = {
             });
         }
     },
+    printColumnsText: function (texts, columnWidth, columnAliment) {
+        if (Platform.OS === "ios") {
+        }
+        else {
+            var result = processColumnText(texts, columnWidth, columnAliment);
+            RNNetPrinter.printRawData(result, function (error) {
+                return console.warn(error);
+            });
+        }
+    },
 };
 export var BLEPrinter = {
     init: function () {
@@ -199,6 +216,16 @@ export var BLEPrinter = {
             });
         }
     },
+    printColumnsText: function (texts, columnWidth, columnAliment) {
+        if (Platform.OS === "ios") {
+        }
+        else {
+            var result = processColumnText(texts, columnWidth, columnAliment);
+            RNNetPrinter.printRawData(result, function (error) {
+                return console.warn(error);
+            });
+        }
+    },
 };
 export var NetPrinter = {
     init: function () {
@@ -272,6 +299,16 @@ export var NetPrinter = {
         }
         else {
             RNNetPrinter.printRawData(text, function (error) {
+                return console.warn(error);
+            });
+        }
+    },
+    printColumnsText: function (texts, columnWidth, columnAliment) {
+        if (Platform.OS === "ios") {
+        }
+        else {
+            var result = processColumnText(texts, columnWidth, columnAliment);
+            RNNetPrinter.printRawData(result, function (error) {
                 return console.warn(error);
             });
         }

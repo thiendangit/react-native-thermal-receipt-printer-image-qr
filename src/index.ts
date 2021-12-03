@@ -1,6 +1,7 @@
 import {NativeModules, NativeEventEmitter, Platform} from "react-native";
 
 import * as EPToolkit from "./utils/EPToolkit";
+import {processColumnText} from './utils/print-column';
 
 const RNUSBPrinter = NativeModules.RNUSBPrinter;
 const RNBLEPrinter = NativeModules.RNBLEPrinter;
@@ -28,6 +29,12 @@ export interface INetPrinter {
   device_name: string;
   host: string;
   port: number;
+}
+
+export enum ColumnAliment {
+  LEFT,
+  CENTER,
+  RIGHT,
 }
 
 const textTo64Buffer = (text: string, opts: PrinterOptions) => {
@@ -151,6 +158,15 @@ export const USBPrinter = {
       );
     }
   },
+  printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[]): void => {
+    if (Platform.OS === "ios") {
+    } else {
+      const result = processColumnText(texts, columnWidth, columnAliment)
+      RNNetPrinter.printRawData(result, (error: Error) =>
+        console.warn(error)
+      );
+    }
+  },
 };
 
 export const BLEPrinter = {
@@ -235,6 +251,15 @@ export const BLEPrinter = {
     if (Platform.OS === "ios") {
     } else {
       RNNetPrinter.printRawData(text, (error: Error) =>
+        console.warn(error)
+      );
+    }
+  },
+  printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[]): void => {
+    if (Platform.OS === "ios") {
+    } else {
+      const result = processColumnText(texts, columnWidth, columnAliment)
+      RNNetPrinter.printRawData(result, (error: Error) =>
         console.warn(error)
       );
     }
@@ -325,6 +350,16 @@ export const NetPrinter = {
     if (Platform.OS === "ios") {
     } else {
       RNNetPrinter.printRawData(text, (error: Error) =>
+        console.warn(error)
+      );
+    }
+  },
+
+  printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[]): void => {
+    if (Platform.OS === "ios") {
+    } else {
+      const result = processColumnText(texts, columnWidth, columnAliment)
+      RNNetPrinter.printRawData(result, (error: Error) =>
         console.warn(error)
       );
     }

@@ -19,6 +19,11 @@ export interface INetPrinter {
     host: string;
     port: number;
 }
+export declare enum ColumnAliment {
+    LEFT = 0,
+    CENTER = 1,
+    RIGHT = 2
+}
 export declare const USBPrinter: {
     init: () => Promise<void>;
     getDeviceList: () => Promise<IUSBPrinter[]>;
@@ -29,6 +34,7 @@ export declare const USBPrinter: {
     printImage: (imgUrl: string, opts?: PrinterOptions) => void;
     printQrCode: (qrCodeBase64: string, opts?: PrinterOptions) => void;
     printRaw: (text: string) => void;
+    printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[]) => void;
 };
 export declare const BLEPrinter: {
     init: () => Promise<void>;
@@ -40,6 +46,7 @@ export declare const BLEPrinter: {
     printImage: (imgUrl: string, opts?: PrinterOptions) => void;
     printQrCode: (qrCodeBase64: string, opts?: PrinterOptions) => void;
     printRaw: (text: string) => void;
+    printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[]) => void;
 };
 export declare const NetPrinter: {
     init: () => Promise<void>;
@@ -51,6 +58,7 @@ export declare const NetPrinter: {
     printImage: (imgUrl: string, opts?: PrinterOptions) => void;
     printQrCode: (qrCodeBase64: string, opts?: PrinterOptions) => void;
     printRaw: (text: string) => void;
+    printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[]) => void;
 };
 export declare const NetPrinterEventEmitter: NativeEventEmitter;
 export declare enum RN_THERMAL_RECEIPT_PRINTER_EVENTS {

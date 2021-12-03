@@ -202,14 +202,30 @@ export const HomeScreen = ({route}: any) => {
       const callback = async (dataURL: string) => {
         let qrProcessed = dataURL.replace(/(\r\n|\n|\r)/gm, "");
         // Can print android and ios with the same type or with encoder for android
-        if (Platform.OS === 'ios') {
+        if (Platform.OS === 'android' || Platform.OS === 'ios') {
           const Printer = printerList[selectedValue];
-          Printer.printImage(`https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg`);
-          Printer.printText(`${BOLD_ON}${CENTER} BILLING ${BOLD_OFF}`, {encoding: 'UTF-8'});
-          Printer.printText(`${CENTER}${TEXT_MAX_WIDTH}${address}${OFF_CENTER}`);
-          Printer.printText('<CD>090 3399 031 555</CD>\n');
-          Printer.printText(`${CENTER}-------------------------------${CENTER}`);
-          Printer.printQrCode(qrProcessed)
+          // Printer.printImage(`https://www.withvector.com/hubfs/Imported_Blog_Media/5e74f12bbdaffffb1aca2d45_Managing%20Fuel%20Receipts%20within%20a%20Business.png`);
+          // Printer.printText(`${BOLD_ON}${CENTER} BILLING ${BOLD_OFF}`, {encoding: 'UTF-8'});
+          // Printer.printText(`${CENTER}${TEXT_MAX_WIDTH}${address}${OFF_CENTER}`);
+          // Printer.printText('<CD>090 3399 031 555</CD>\n');
+          // Printer.printText(`${CENTER}-------------------------------${CENTER}`);
+          /**
+           * 80mm => 46 char
+           */
+          let orderList = [
+            ["1. Skirt Palas Labuh Muslimah Fashion", "x2", "500$"],
+            ["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4", "500$"],
+            ["3. Women Crew Neck Button Down Ruffle Collar Loose Blouse", "x1", "3000$"],
+            ["4. Retro Buttons Up Full Sleeve Loose", "x10", "200$"],
+          ];
+          let columnAliment = [ColumnAliment.LEFT, ColumnAliment.CENTER, ColumnAliment.RIGHT];
+          let columnWidth = [46 - (7 + 12), 7, 12]
+          for (let i in orderList) {
+            const result = await printColumnsText(orderList[i], columnWidth, columnAliment);
+            Printer.printText(`${result}` + '\n_');
+          }
+          // Printer.printText(`${result}` + '\n_');
+          // Printer.printQrCode(qrProcessed)
           Printer.printBill(`${CENTER}Thank you\n`);
         } else {
           // android
@@ -219,11 +235,8 @@ export const HomeScreen = ({route}: any) => {
             .initialize()
             .align('center')
             .line('BILLING')
-            .line('address')
-            .line('Website: www.google.com.vn')
-            // qr code
-            .qrcode('hello!')
-            .encode();
+            .qrcode('https://nielsleenheer.com')
+            .encode()
           let base64String = Buffer.from(_encoder).toString('base64');
           Printer.printRaw(base64String);
         }

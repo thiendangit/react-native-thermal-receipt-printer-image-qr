@@ -38,13 +38,6 @@ export const FindPrinter = () => {
           }
         },
       );
-      NetPrinterEventEmitter.addListener(
-        RN_THERMAL_RECEIPT_PRINTER_EVENTS.EVENT_NET_PRINTER_SCANNED_ERROR,
-        error => {
-          setLoading(false);
-          console.log({error});
-        },
-      );
       (async () => {
         const results = await NetPrinter.getDeviceList();
         console.log({results});
@@ -69,18 +62,18 @@ export const FindPrinter = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} >
       {devices !== undefined &&
-        devices?.length > 0 &&
-        devices?.map((item: any, index) => {
-          const onPress = () => onSelectedPrinter(item);
-          return (
-            <TouchableOpacity key={`printer-item-${index}`} onPress={onPress}>
-              <Text>{item.host}</Text>
-            </TouchableOpacity>
-          );
-        })}
-    </View>
+      devices?.length > 0 &&
+      devices?.map((item: any, index) => {
+        const onPress = () => onSelectedPrinter(item);
+        return (
+          <TouchableOpacity key={`printer-item-${index}`} onPress={onPress} >
+            <Text >{item.host}</Text >
+          </TouchableOpacity >
+        );
+      })}
+    </View >
   );
 };
 
