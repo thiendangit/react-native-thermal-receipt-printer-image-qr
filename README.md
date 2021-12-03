@@ -1,13 +1,12 @@
 # react-native-thermal-receipt-printer-image-qr
 
-Fork of `react-native-thermal-receipt-printer` and add implement for print Image,QR Code,Print With Column with NET, 
-USB.
-
-I fork this for my quickly project print with NET(android & ios) and USB(android).
-- IOS : :heavy_check_mark:
-- ANDROID: :heavy_check_mark:
-- fix cut :heavy_check_mark:
-- Print With Column :heavy_check_mark:
+- I fork this for my quickly project print with NET(android & ios) and USB(android).
+Bluetooth is not implement. Just using old structure (ios & android).
+- Fork of `react-native-thermal-receipt-printer` and add implement :
+    + Ios: :heavy_check_mark:
+    + Android: :heavy_check_mark:
+    + Fix cut:heavy_check_mark:
+    + Print With Column :heavy_check_mark:
 
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
 <img src="image/bill.jpg" alt="bill" width="250" height="580"/>
