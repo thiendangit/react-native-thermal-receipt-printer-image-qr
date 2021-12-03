@@ -1,7 +1,7 @@
 # react-native-thermal-receipt-printer-image-qr
 
 - I fork this for my quickly project print with NET(android & ios) and USB(android).
-Bluetooth is not implement. Just using old structure (ios & android).
+- Bluetooth is not implement. Just using old structure (ios & android).
 - Fork of `react-native-thermal-receipt-printer` and add implement :
     + Ios : :heavy_check_mark:
     + Android : :heavy_check_mark:
@@ -14,12 +14,12 @@ Bluetooth is not implement. Just using old structure (ios & android).
 </div>
 
 ## Installation
-- add this line to the dependencies of package.json
 ```
-react-native-thermal-receipt-printer-image-qr : "https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr.git"
+npm i react-native-thermal-receipt-printer-image-qr
 ```
+or
 ```
-yarn install
+yarn add react-native-thermal-receipt-printer-image-qr
 ```
 
 ## Troubleshoot
@@ -58,17 +58,6 @@ and comment out code related to Flipper in `ios/AppDelegate.m`
 | USBPrinter | :heavy_check_mark: |                    |
 | BLEPrinter | :heavy_check_mark: | :heavy_check_mark: |
 | NetPrinter | :heavy_check_mark: | :heavy_check_mark: |
-
-## Predefined tag
-| Tags          | Description           |
-|:-------------:|:---------------------:|
-| C             | Center                |
-| D             | Medium font           |
-| B             | Large font            |
-| M             | Medium font           |
-| CM            | Medium font, centered |
-| CB            | Medium font, centered |
-| CD            | Large font, centered  |
 
 ## Development workflow
 
