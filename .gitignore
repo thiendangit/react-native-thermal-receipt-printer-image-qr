@@ -4,6 +4,7 @@
 
 # Xcode
 #
+.npmignore
 build/
 *.pbxuser
 !default.pbxuser
