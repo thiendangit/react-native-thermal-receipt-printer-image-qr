@@ -1,10 +1,9 @@
 # react-native-thermal-receipt-printer-image-qr
 
-- I fork this for my quickly project print with NET(android & ios) and USB(android).
-- Bluetooth is not implement. Just using old structure (ios & android).
+- I fork this for my quickly project print with NET(android & ios) and USB(android) with Image & QR.
+- Bluetooth just using old structure (ios & android) not implement printing with Image & QR.
 - Fork of `react-native-thermal-receipt-printer` and add implement :
-    + Ios : :heavy_check_mark:
-    + Android : :heavy_check_mark:
+    + Image & QR : :heavy_check_mark:
     + Fix cut : :heavy_check_mark:
     + Print With Column : :heavy_check_mark:
 
