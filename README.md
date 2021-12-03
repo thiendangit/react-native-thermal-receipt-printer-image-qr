@@ -3,10 +3,10 @@
 - I fork this for my quickly project print with NET(android & ios) and USB(android).
 Bluetooth is not implement. Just using old structure (ios & android).
 - Fork of `react-native-thermal-receipt-printer` and add implement :
-    + Ios: :heavy_check_mark:
-    + Android: :heavy_check_mark:
-    + Fix cut:heavy_check_mark:
-    + Print With Column :heavy_check_mark:
+    + Ios : :heavy_check_mark:
+    + Android : :heavy_check_mark:
+    + Fix cut : :heavy_check_mark:
+    + Print With Column : :heavy_check_mark:
 
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
 <img src="image/bill.jpg" alt="bill" width="250" height="580"/>
