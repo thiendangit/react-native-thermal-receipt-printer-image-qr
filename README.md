@@ -9,7 +9,7 @@ Bluetooth is not implement. Just using old structure (ios & android).
     + Print With Column : :heavy_check_mark:
 
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
-<img src="image/bill.jpg" alt="bill" width="250" height="580"/>
+<img src="image/receipt.jpg" alt="bill" width="250" height="580"/>
 <img src="image/screenshot.jpg" alt="screenshot" width="250" height="580"/>
 </div>
 
