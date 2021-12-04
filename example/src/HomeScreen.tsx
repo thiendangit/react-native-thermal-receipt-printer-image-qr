@@ -19,7 +19,7 @@ import {
   IBLEPrinter,
   INetPrinter,
   ColumnAliment
-} from 'react-native-thermal-receipt-printer-image-gr';
+} from 'react-native-thermal-receipt-printer-image-qr';
 import Loading from '../Loading';
 import {DeviceType} from './FindPrinter';
 import {navigate} from './App';

@@ -374,7 +374,7 @@ export const NetPrinter = {
   /**
    * `columnWidth`
    * 80mm => 46 character
-   * 58mm => ...
+   * 58mm => 30 character
    */
   printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], opts: PrinterOptions = {}): void => {
     const result = processColumnText(texts, columnWidth, columnAliment)

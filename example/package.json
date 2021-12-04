@@ -26,8 +26,8 @@
     "react-native-sunmi-inner-scanner": "^0.1.8",
     "react-native-sunmi-v2-printer": "^1.0.1",
     "react-native-svg": "^12.1.1",
-    "react-native-vector-icons": "^9.0.0",
-    "react-native-thermal-receipt-printer-image-gr": "https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr.git"
+    "react-native-thermal-receipt-printer-image-qr": "^0.1.1",
+    "react-native-vector-icons": "^9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

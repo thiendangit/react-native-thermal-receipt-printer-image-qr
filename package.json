@@ -18,7 +18,7 @@
     "dist",
     "android",
     "ios",
-    "react-native-thermal-receipt-printer.podspec"
+    "react-native-thermal-receipt-printer-image-qr.podspec"
   ],
   "keywords": [
     "react-native",
