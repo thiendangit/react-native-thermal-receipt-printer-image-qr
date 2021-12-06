@@ -5831,7 +5831,7 @@ react-native-svg@^12.1.1:
   dependencies:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
-
+    
 react-native-thermal-receipt-printer-image-qr@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/react-native-thermal-receipt-printer-image-qr/-/react-native-thermal-receipt-printer-image-qr-0.1.2.tgz#843ce266b34e19b88647fc176d86ec2503917446"
