@@ -44,7 +44,8 @@ export const Commands = {
   },
   LINE_SPACING: {
     LS_DEFAULT: '\x1b\x32',
-    LS_SET: '\x1b\x33'
+    LS_SET: '\x1b\x33',
+    LS_SET1: '\x1b\x31',
   },
   HARDWARE: {
     HW_INIT: '\x1b\x40', // Clear data in buffer and reset modes

@@ -4,27 +4,56 @@ const processAlignText = (text: string, restLength: number, align: ColumnAliment
   if (align === 0) {
     return text + " ".repeat(restLength);
   } else if (align === 1) {
-    return " ".repeat(Math.ceil(restLength / 2)) + text + " ".repeat(Math.floor(restLength / 2));
+    return " ".repeat(Math.floor(restLength / 2)) + text + " ".repeat(Math.ceil(restLength / 2));
   } else if (align === 2) {
     return " ".repeat(restLength) + text;
   }
   return '';
 };
 
-export const processColumnText = (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[]): string => {
+const processNewLine = (text: string, maxLength: number): {
+  text: string;
+  text_tail: string;
+} => {
+  let newText: string;
+  let newTextTail: string;
+  const next_char = text.slice(maxLength, maxLength + 1)
+
+  if (next_char === ' ') {
+    newText = text.slice(0, maxLength)
+    newTextTail = text.slice(maxLength, text.length)
+  } else {
+    const newMaxLength = text.slice(0, maxLength).split('').map(e => e).lastIndexOf(' ');
+    if (newMaxLength === -1) {
+      newText = text.slice(0, maxLength)
+      newTextTail = text.slice(maxLength, text.length)
+    } else {
+      newText = text.slice(0, newMaxLength)
+      newTextTail = text.slice(newMaxLength, text.length)
+    }
+  }
+
+  return {
+    text: newText,
+    text_tail: newTextTail.trim()
+  }
+};
+
+export const processColumnText = (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], columnStyle: string[]): string => {
   let new_texts: [string, string, string] = ['', '', ''];
   let result = ''
   texts.map((text, idx) => {
     if (text.length >= columnWidth[idx]) {
-      result += text.slice(0, columnWidth[idx]) + " ";
-      new_texts[idx] = text.slice(columnWidth[idx], text.length)
+      const processedText = processNewLine(text, columnWidth[idx]);
+      result += columnStyle?.[idx] + processAlignText(processedText.text, columnWidth[idx] - processedText.text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
+      new_texts[idx] = processedText.text_tail;
     } else {
-      result += processAlignText(text.trim(), columnWidth[idx] - text.length, columnAliment[idx]);
+      result += columnStyle?.[idx] + processAlignText(text.trim(), columnWidth[idx] - text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
     }
   });
   const index_nonEmpty = new_texts.findIndex((new_text) => new_text != '');
   if (index_nonEmpty !== -1) {
-    result += "\n" + processColumnText(new_texts, columnWidth, columnAliment)
+    result += "\n" + processColumnText(new_texts, columnWidth, columnAliment, columnStyle)
   }
   return result
 };
