@@ -12,9 +12,11 @@ var __assign = (this && this.__assign) || function () {
 import { NativeModules, NativeEventEmitter, Platform } from "react-native";
 import * as EPToolkit from "./utils/EPToolkit";
 import { processColumnText } from './utils/print-column';
+import PRINTER_COMMANDS from './utils/printer-commands';
 var RNUSBPrinter = NativeModules.RNUSBPrinter;
 var RNBLEPrinter = NativeModules.RNBLEPrinter;
 var RNNetPrinter = NativeModules.RNNetPrinter;
+export var COMMANDS = PRINTER_COMMANDS;
 export var ColumnAliment;
 (function (ColumnAliment) {
     ColumnAliment[ColumnAliment["LEFT"] = 0] = "LEFT";
@@ -44,10 +46,11 @@ var billTo64Buffer = function (text, opts) {
     var buffer = EPToolkit.exchange_text(text, options);
     return buffer.toString("base64");
 };
-var textPreprocessingIOS = function (text, canCut) {
+var textPreprocessingIOS = function (text, canCut, beep) {
     if (canCut === void 0) { canCut = true; }
+    if (beep === void 0) { beep = true; }
     var options = {
-        beep: true,
+        beep: beep,
         cut: canCut,
     };
     return {
@@ -100,7 +103,11 @@ export var USBPrinter = {
             return console.warn(error);
         });
     },
-    //image url
+    /**
+     * image url
+     * @param imgUrl
+     * @param opts
+     */
     printImage: function (imgUrl, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
@@ -110,7 +117,11 @@ export var USBPrinter = {
             RNUSBPrinter.printImageData(imgUrl, function (error) { return console.warn(error); });
         }
     },
-    // base64string, except -> data:image/png;base64,
+    /**
+     * base64string, except -> data:image/png;base64,
+     * @param qrCodeBase64
+     * @param opts
+     */
     printQrCode: function (qrCodeBase64, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
@@ -120,7 +131,10 @@ export var USBPrinter = {
             RNUSBPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
         }
     },
-    // android print with encoder
+    /**
+     * android print with encoder
+     * @param text
+     */
     printRaw: function (text) {
         if (Platform.OS === "ios") {
         }
@@ -130,9 +144,9 @@ export var USBPrinter = {
             });
         }
     },
-    printColumnsText: function (texts, columnWidth, columnAliment, opts) {
+    printColumnsText: function (texts, columnWidth, columnAliment, columnStyle, opts) {
         if (opts === void 0) { opts = {}; }
-        var result = processColumnText(texts, columnWidth, columnAliment);
+        var result = processColumnText(texts, columnWidth, columnAliment, columnStyle);
         RNUSBPrinter.printRawData(textTo64Buffer(result, opts), function (error) {
             return console.warn(error);
         });
@@ -163,7 +177,7 @@ export var BLEPrinter = {
     printText: function (text, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            var processedText = textPreprocessingIOS(text, false);
+            var processedText = textPreprocessingIOS(text, false, false);
             RNBLEPrinter.printRawData(processedText.text, processedText.opts, function (error) { return console.warn(error); });
         }
         else {
@@ -173,9 +187,10 @@ export var BLEPrinter = {
         }
     },
     printBill: function (text, opts) {
+        var _a, _b;
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            var processedText = textPreprocessingIOS(text);
+            var processedText = textPreprocessingIOS(text, (_a = opts === null || opts === void 0 ? void 0 : opts.cut) !== null && _a !== void 0 ? _a : true, (_b = opts.beep) !== null && _b !== void 0 ? _b : true);
             RNBLEPrinter.printRawData(processedText.text, processedText.opts, function (error) { return console.warn(error); });
         }
         else {
@@ -184,27 +199,47 @@ export var BLEPrinter = {
             });
         }
     },
-    //image url
+    /**
+     * image url
+     * @param imgUrl
+     * @param opts
+     */
     printImage: function (imgUrl, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
+            /**
+             * just development
+             */
             RNBLEPrinter.printImageData(imgUrl, opts, function (error) { return console.warn(error); });
         }
         else {
-            // RNNetPrinter.printImageData(imgUrl, (error: Error) => console.warn(error));
+            RNBLEPrinter.printImageData(imgUrl, function (error) { return console.warn(error); });
         }
     },
-    // base64string, except -> data:image/png;base64,
+    /**
+     * base64string, except -> data:image/png;base64,
+     * @param qrCodeBase64
+     * @param opts
+     */
     printQrCode: function (qrCodeBase64, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
+            /**
+             * just development
+             */
             RNBLEPrinter.printQrCode(qrCodeBase64, opts, function (error) { return console.warn(error); });
         }
         else {
-            // RNNetPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+            /**
+             * just development
+             */
+            RNBLEPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
         }
     },
-    // android print with encoder
+    /**
+     * android print with encoder
+     * @param text
+     */
     printRaw: function (text) {
         if (Platform.OS === "ios") {
         }
@@ -214,11 +249,11 @@ export var BLEPrinter = {
             });
         }
     },
-    printColumnsText: function (texts, columnWidth, columnAliment, opts) {
+    printColumnsText: function (texts, columnWidth, columnAliment, columnStyle, opts) {
         if (opts === void 0) { opts = {}; }
-        var result = processColumnText(texts, columnWidth, columnAliment);
+        var result = processColumnText(texts, columnWidth, columnAliment, columnStyle);
         if (Platform.OS === "ios") {
-            var processedText = textPreprocessingIOS(result, false);
+            var processedText = textPreprocessingIOS(result, false, false);
             RNBLEPrinter.printRawData(processedText.text, processedText.opts, function (error) { return console.warn(error); });
         }
         else {
@@ -253,7 +288,7 @@ export var NetPrinter = {
     printText: function (text, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            var processedText = textPreprocessingIOS(text, false);
+            var processedText = textPreprocessingIOS(text, false, false);
             RNNetPrinter.printRawData(processedText.text, processedText.opts, function (error) { return console.warn(error); });
         }
         else {
@@ -263,9 +298,10 @@ export var NetPrinter = {
         }
     },
     printBill: function (text, opts) {
+        var _a, _b;
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            var processedText = textPreprocessingIOS(text);
+            var processedText = textPreprocessingIOS(text, (_a = opts === null || opts === void 0 ? void 0 : opts.cut) !== null && _a !== void 0 ? _a : true, (_b = opts.beep) !== null && _b !== void 0 ? _b : true);
             RNNetPrinter.printRawData(processedText.text, processedText.opts, function (error) { return console.warn(error); });
         }
         else {
@@ -274,7 +310,11 @@ export var NetPrinter = {
             });
         }
     },
-    //image url
+    /**
+     * image url
+     * @param imgUrl
+     * @param opts
+     */
     printImage: function (imgUrl, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
@@ -284,7 +324,11 @@ export var NetPrinter = {
             RNNetPrinter.printImageData(imgUrl, function (error) { return console.warn(error); });
         }
     },
-    // base64string, except -> data:image/png;base64,
+    /**
+     * base64string, except -> data:image/png;base64,
+     * @param qrCodeBase64
+     * @param opts
+     */
     printQrCode: function (qrCodeBase64, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
@@ -294,7 +338,10 @@ export var NetPrinter = {
             RNNetPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
         }
     },
-    // android print with encoder
+    /**
+     * Android print with encoder
+     * @param text
+     */
     printRaw: function (text) {
         if (Platform.OS === "ios") {
         }
@@ -307,13 +354,13 @@ export var NetPrinter = {
     /**
      * `columnWidth`
      * 80mm => 46 character
-     * 58mm => ...
+     * 58mm => 30 character
      */
-    printColumnsText: function (texts, columnWidth, columnAliment, opts) {
+    printColumnsText: function (texts, columnWidth, columnAliment, columnStyle, opts) {
         if (opts === void 0) { opts = {}; }
-        var result = processColumnText(texts, columnWidth, columnAliment);
+        var result = processColumnText(texts, columnWidth, columnAliment, columnStyle);
         if (Platform.OS === "ios") {
-            var processedText = textPreprocessingIOS(result, false);
+            var processedText = textPreprocessingIOS(result, false, false);
             RNNetPrinter.printRawData(processedText.text, processedText.opts, function (error) { return console.warn(error); });
         }
         else {

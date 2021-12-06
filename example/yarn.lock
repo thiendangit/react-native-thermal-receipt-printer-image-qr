@@ -5831,11 +5831,11 @@ react-native-svg@^12.1.1:
   dependencies:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
-
-react-native-thermal-receipt-printer-image-qr@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-thermal-receipt-printer-image-qr/-/react-native-thermal-receipt-printer-image-qr-0.1.1.tgz#01c441c266ab3d537f19264e4f63b365db6eb8f2"
-  integrity sha512-s5tM5oNsZeyrHz4kOzS50cDnNe3i5+bWo8z2YTcJ93o1O/1k4bXbn5AiPLJ76uWP8URdCP+tvwgngLuwnbijPw==
+    
+react-native-thermal-receipt-printer-image-qr@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-thermal-receipt-printer-image-qr/-/react-native-thermal-receipt-printer-image-qr-0.1.2.tgz#843ce266b34e19b88647fc176d86ec2503917446"
+  integrity sha512-grZ8yYvI7Kk7XZG7GNuxMAGstb+v1uqznx5szvCSrBc26UeeP6v/gE6idO6JQweQKnDBklFYN6GSGLsirOSWvw==
   dependencies:
     buffer "^5.6.0"
     iconv-lite "^0.6.2"

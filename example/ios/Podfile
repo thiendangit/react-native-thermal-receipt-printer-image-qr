@@ -16,6 +16,8 @@ target 'RNPrinter' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'react-native-thermal-receipt-printer-image-qr', :path => '../node_modules/react-native-thermal-receipt-printer-image-qr'
+
   target 'RNPrinterTests' do
     inherit! :complete
     # Pods for testing

@@ -18,13 +18,13 @@ import {
   IUSBPrinter,
   IBLEPrinter,
   INetPrinter,
-  ColumnAliment
+  ColumnAliment,
+  COMMANDS
 } from 'react-native-thermal-receipt-printer-image-qr';
 import Loading from '../Loading';
 import {DeviceType} from './FindPrinter';
 import {navigate} from './App';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import {Commands} from './utils';
 import QRCode from 'react-native-qrcode-svg';
 import {useRef} from 'react';
 import {Buffer} from 'buffer';
@@ -188,11 +188,11 @@ export const HomeScreen = ({route}: any) => {
   };
 
   const handlePrintBill = async () => {
-    let address = "2700 S Grand Ave, Los Angeles, CA 90007, USAUSAUSAUSAUSA."
-    const BOLD_ON = Commands.TEXT_FORMAT.TXT_BOLD_ON;
-    const BOLD_OFF = Commands.TEXT_FORMAT.TXT_BOLD_OFF;
-    const CENTER = Commands.TEXT_FORMAT.TXT_ALIGN_CT;
-    const OFF_CENTER = Commands.TEXT_FORMAT.TXT_ALIGN_LT;
+    let address = "2700 S123 Grand Ave, Los Angeles, CA 90007223, USA."
+    const BOLD_ON = COMMANDS.TEXT_FORMAT.TXT_BOLD_ON;
+    const BOLD_OFF = COMMANDS.TEXT_FORMAT.TXT_BOLD_OFF;
+    const CENTER = COMMANDS.TEXT_FORMAT.TXT_ALIGN_CT;
+    const OFF_CENTER = COMMANDS.TEXT_FORMAT.TXT_ALIGN_LT;
     try {
       const getDataURL = () => {
         (QrRef as any).toDataURL(callback);
@@ -208,23 +208,28 @@ export const HomeScreen = ({route}: any) => {
           Printer.printText('090 3399 031 555\n');
           Printer.printText(`Date : 15- 09 - 2021 /15 : 29 : 57 / Admin`);
           Printer.printText(`Product : Total - 4 / No. (1,2,3,4)\n`);
-          Printer.printText(`${CENTER}-------------------------------${CENTER}\n`);
+          Printer.printText(`${CENTER}${COMMANDS.HORIZONTAL_LINE.HR_80MM}${CENTER}\n`);
           let orderList = [
             ["1. Skirt Palas Labuh Muslimah Fashion", "x2", "500$"],
-            ["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4", "500$"],
-            ["3. Women Crew Neck Button Down Ruffle Collar Loose Blouse", "x1", "3000$"],
+            ["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4222", "500$"],
+            ["3. Women Crew Neck Button Down Ruffle Collar Loose Blouse", "x1", "30000000000000$"],
             ["4. Retro Buttons Up Full Sleeve Loose", "x10", "200$"],
+            ["5. Retro Buttons Up", "x10", "200$"],
           ];
           let columnAliment = [ColumnAliment.LEFT, ColumnAliment.CENTER, ColumnAliment.RIGHT];
           let columnWidth = [46 - (7 + 12), 7, 12]
+          const header = ['Product list', 'Qty', 'Price']
+          Printer.printColumnsText(header, columnWidth, columnAliment, [`${BOLD_ON}`, '', '']);
+          Printer.printText(`\n${CENTER}${COMMANDS.HORIZONTAL_LINE.HR3_80MM}${CENTER}\n`);
           for (let i in orderList) {
-            Printer.printColumnsText(orderList[i], columnWidth, columnAliment);
+            Printer.printColumnsText(orderList[i], columnWidth, columnAliment, [`${BOLD_OFF}`, '', '']);
           }
+          Printer.printText(`\n\n`);
           Printer.printQrCode(qrProcessed, {
             // ios
             imageWidth: 100
           })
-          Printer.printBill(`${CENTER}Thank you\n`);
+          Printer.printBill(`${CENTER}Thank you\n`, {beep: false});
         } else {
           // optional for android
           // android

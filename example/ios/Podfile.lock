@@ -219,7 +219,7 @@ PODS:
     - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
-  - react-native-thermal-receipt-printer (1.1.5):
+  - react-native-thermal-receipt-printer-image-qr (0.1.2):
     - React
   - React-perflogger (0.66.2)
   - React-RCTActionSheet (0.66.2):
@@ -288,7 +288,7 @@ PODS:
     - React-perflogger (= 0.66.2)
   - RNCPicker (2.2.1):
     - React-Core
-  - RNScreens (3.9.0):
+  - RNScreens (3.10.0):
     - React-Core
     - React-RCTImage
   - RNSVG (12.1.1):
@@ -319,7 +319,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - react-native-thermal-receipt-printer (from `../node_modules/react-native-thermal-receipt-printer-image-gr`)
+  - react-native-thermal-receipt-printer-image-qr (from `../node_modules/react-native-thermal-receipt-printer-image-qr`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -381,8 +381,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
-  react-native-thermal-receipt-printer:
-    :path: "../node_modules/react-native-thermal-receipt-printer-image-gr"
+  react-native-thermal-receipt-printer-image-qr:
+    :path: "../node_modules/react-native-thermal-receipt-printer-image-qr"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -439,7 +439,7 @@ SPEC CHECKSUMS:
   React-logger: faee236598b0f7e1a5e3b68577016ac451f1f993
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
-  react-native-thermal-receipt-printer: dc8a238195d2516f9e881ff736a5da6bc08d98ae
+  react-native-thermal-receipt-printer-image-qr: 375e4a1ff8b0905c68a5d71791512a2f6f5e3412
   React-perflogger: 5ab487cacfe6ec19bfe3d3f8072bf71eb07d63da
   React-RCTActionSheet: 03f25695e095fb5aa003828620943c74cc281fec
   React-RCTAnimation: eaf82da39f0c36fb0ef2a28df797c5f73a2a98ea
@@ -453,7 +453,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 393e26602c1b248683372051e34db63e359e3b01
   ReactCommon: c0263c1a41509aeb94be3214fa7bc3b71eae5ef6
   RNCPicker: cb57c823d5ce8d2d0b5dfb45ad97b737260dc59e
-  RNScreens: 4d79118be80f79fa1f4aa131909a1d6e86280af3
+  RNScreens: 03ba504f8c98607ad1f07808e71040e0afa335ec
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
   Yoga: 9a08effa851c1d8cc1647691895540bc168ea65f

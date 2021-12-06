@@ -163,7 +163,7 @@ RCT_EXPORT_METHOD(printRawData:(NSString *)text
 
         // [[PrinterSDK defaultPrinterSDK] printTestPaper];
         [[PrinterSDK defaultPrinterSDK] printText:text];
-       beep ? [[PrinterSDK defaultPrinterSDK] beep] : nil;
+        beep ? [[PrinterSDK defaultPrinterSDK] beep] : nil;
         cut ? [[PrinterSDK defaultPrinterSDK] cutPaper] : nil;
     } @catch (NSException *exception) {
         errorCallback(@[exception.reason]);
@@ -181,10 +181,10 @@ RCT_EXPORT_METHOD(printImageData:(NSString *)imgUrl
 
         NSString* printerWidthType = [options valueForKey:@"printerWidthType"];
 
-        NSInteger printerWidth = 400;
+        NSInteger printerWidth = 576;
 
         if(printerWidthType != nil && [printerWidthType isEqualToString:@"58"]) {
-            printerWidth = 300;
+            printerWidth = 384;
         }
 
         if(imageData != nil){
