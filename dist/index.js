@@ -100,7 +100,11 @@ export var USBPrinter = {
             return console.warn(error);
         });
     },
-    //image url
+    /**
+     * image url
+     * @param imgUrl
+     * @param opts
+     */
     printImage: function (imgUrl, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
@@ -110,7 +114,11 @@ export var USBPrinter = {
             RNUSBPrinter.printImageData(imgUrl, function (error) { return console.warn(error); });
         }
     },
-    // base64string, except -> data:image/png;base64,
+    /**
+     * base64string, except -> data:image/png;base64,
+     * @param qrCodeBase64
+     * @param opts
+     */
     printQrCode: function (qrCodeBase64, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
@@ -120,7 +128,10 @@ export var USBPrinter = {
             RNUSBPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
         }
     },
-    // android print with encoder
+    /**
+     * android print with encoder
+     * @param text
+     */
     printRaw: function (text) {
         if (Platform.OS === "ios") {
         }
@@ -184,27 +195,47 @@ export var BLEPrinter = {
             });
         }
     },
-    //image url
+    /**
+     * image url
+     * @param imgUrl
+     * @param opts
+     */
     printImage: function (imgUrl, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
+            /**
+             * just development
+             */
             RNBLEPrinter.printImageData(imgUrl, opts, function (error) { return console.warn(error); });
         }
         else {
-            // RNNetPrinter.printImageData(imgUrl, (error: Error) => console.warn(error));
+            RNBLEPrinter.printImageData(imgUrl, function (error) { return console.warn(error); });
         }
     },
-    // base64string, except -> data:image/png;base64,
+    /**
+     * base64string, except -> data:image/png;base64,
+     * @param qrCodeBase64
+     * @param opts
+     */
     printQrCode: function (qrCodeBase64, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
+            /**
+             * just development
+             */
             RNBLEPrinter.printQrCode(qrCodeBase64, opts, function (error) { return console.warn(error); });
         }
         else {
-            // RNNetPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+            /**
+             * just development
+             */
+            RNBLEPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
         }
     },
-    // android print with encoder
+    /**
+     * android print with encoder
+     * @param text
+     */
     printRaw: function (text) {
         if (Platform.OS === "ios") {
         }
@@ -274,7 +305,11 @@ export var NetPrinter = {
             });
         }
     },
-    //image url
+    /**
+     * image url
+     * @param imgUrl
+     * @param opts
+     */
     printImage: function (imgUrl, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
@@ -284,7 +319,11 @@ export var NetPrinter = {
             RNNetPrinter.printImageData(imgUrl, function (error) { return console.warn(error); });
         }
     },
-    // base64string, except -> data:image/png;base64,
+    /**
+     * base64string, except -> data:image/png;base64,
+     * @param qrCodeBase64
+     * @param opts
+     */
     printQrCode: function (qrCodeBase64, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
@@ -294,7 +333,10 @@ export var NetPrinter = {
             RNNetPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
         }
     },
-    // android print with encoder
+    /**
+     * Android print with encoder
+     * @param text
+     */
     printRaw: function (text) {
         if (Platform.OS === "ios") {
         }
@@ -307,7 +349,7 @@ export var NetPrinter = {
     /**
      * `columnWidth`
      * 80mm => 46 character
-     * 58mm => ...
+     * 58mm => 30 character
      */
     printColumnsText: function (texts, columnWidth, columnAliment, opts) {
         if (opts === void 0) { opts = {}; }

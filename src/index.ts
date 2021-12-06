@@ -19,9 +19,10 @@ export interface PrinterImageOptions {
   cut?: boolean;
   tailingLine?: boolean;
   encoding?: string;
-  // ios
+  /**
+   * ios only
+   */
   imageWidth?: number,
-  // ios
   paddingX?: number
 }
 
@@ -146,7 +147,11 @@ export const USBPrinter = {
     RNUSBPrinter.printRawData(billTo64Buffer(text, opts), (error: Error) =>
       console.warn(error)
     ),
-  //image url
+  /**
+   * image url
+   * @param imgUrl
+   * @param opts
+   */
   printImage: function (imgUrl: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
       RNUSBPrinter.printImageData(imgUrl, opts, (error: Error) => console.warn(error));
@@ -154,7 +159,11 @@ export const USBPrinter = {
       RNUSBPrinter.printImageData(imgUrl, (error: Error) => console.warn(error));
     }
   },
-  // base64string, except -> data:image/png;base64,
+  /**
+   * base64string, except -> data:image/png;base64,
+   * @param qrCodeBase64
+   * @param opts
+   */
   printQrCode: function (qrCodeBase64: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
       RNUSBPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
@@ -162,7 +171,10 @@ export const USBPrinter = {
       RNUSBPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
     }
   },
-  // android print with encoder
+  /**
+   * android print with encoder
+   * @param text
+   */
   printRaw: (text: string): void => {
     if (Platform.OS === "ios") {
     } else {
@@ -240,23 +252,43 @@ export const BLEPrinter = {
       );
     }
   },
-  //image url
+  /**
+   * image url
+   * @param imgUrl
+   * @param opts
+   */
   printImage: function (imgUrl: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
+      /**
+       * just development
+       */
       RNBLEPrinter.printImageData(imgUrl, opts, (error: Error) => console.warn(error));
     } else {
-      // RNNetPrinter.printImageData(imgUrl, (error: Error) => console.warn(error));
+      RNBLEPrinter.printImageData(imgUrl, (error: Error) => console.warn(error));
     }
   },
-  // base64string, except -> data:image/png;base64,
+  /**
+   * base64string, except -> data:image/png;base64,
+   * @param qrCodeBase64
+   * @param opts
+   */
   printQrCode: function (qrCodeBase64: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
+      /**
+       * just development
+       */
       RNBLEPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
     } else {
-      // RNNetPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+      /**
+       * just development
+       */
+      RNBLEPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
     }
   },
-  // android print with encoder
+  /**
+   * android print with encoder
+   * @param text
+   */
   printRaw: (text: string): void => {
     if (Platform.OS === "ios") {
     } else {
@@ -344,7 +376,11 @@ export const NetPrinter = {
       );
     }
   },
-  //image url
+  /**
+   * image url
+   * @param imgUrl
+   * @param opts
+   */
   printImage: function (imgUrl: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
       RNNetPrinter.printImageData(imgUrl, opts, (error: Error) => console.warn(error));
@@ -352,7 +388,11 @@ export const NetPrinter = {
       RNNetPrinter.printImageData(imgUrl, (error: Error) => console.warn(error));
     }
   },
-  // base64string, except -> data:image/png;base64,
+  /**
+   * base64string, except -> data:image/png;base64,
+   * @param qrCodeBase64
+   * @param opts
+   */
   printQrCode: function (qrCodeBase64: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
       RNNetPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
@@ -361,7 +401,10 @@ export const NetPrinter = {
     }
   },
 
-  // android print with encoder
+  /**
+   * Android print with encoder
+   * @param text
+   */
   printRaw: (text: string): void => {
     if (Platform.OS === "ios") {
     } else {

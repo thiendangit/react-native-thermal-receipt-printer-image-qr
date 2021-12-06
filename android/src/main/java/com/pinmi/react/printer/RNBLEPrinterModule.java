@@ -70,7 +70,8 @@ public class RNBLEPrinterModule extends ReactContextBaseJavaModule implements RN
 
     @Override
     public void printImageData(String imageUrl, Callback errorCallback) {
-
+        Log.v("imageUrl", imageUrl);
+        adapter.printImageData(imageUrl, errorCallback);
     }
 
     @Override

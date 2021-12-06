@@ -10,6 +10,9 @@ export interface PrinterImageOptions {
     cut?: boolean;
     tailingLine?: boolean;
     encoding?: string;
+    /**
+     * ios only
+     */
     imageWidth?: number;
     paddingX?: number;
 }
@@ -39,8 +42,22 @@ export declare const USBPrinter: {
     closeConn: () => Promise<void>;
     printText: (text: string, opts?: PrinterOptions) => void;
     printBill: (text: string, opts?: PrinterOptions) => void;
+    /**
+     * image url
+     * @param imgUrl
+     * @param opts
+     */
     printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
+    /**
+     * base64string, except -> data:image/png;base64,
+     * @param qrCodeBase64
+     * @param opts
+     */
     printQrCode: (qrCodeBase64: string, opts?: PrinterImageOptions) => void;
+    /**
+     * android print with encoder
+     * @param text
+     */
     printRaw: (text: string) => void;
     printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], opts?: PrinterOptions) => void;
 };
@@ -51,8 +68,22 @@ export declare const BLEPrinter: {
     closeConn: () => Promise<void>;
     printText: (text: string, opts?: PrinterOptions) => void;
     printBill: (text: string, opts?: PrinterOptions) => void;
+    /**
+     * image url
+     * @param imgUrl
+     * @param opts
+     */
     printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
+    /**
+     * base64string, except -> data:image/png;base64,
+     * @param qrCodeBase64
+     * @param opts
+     */
     printQrCode: (qrCodeBase64: string, opts?: PrinterImageOptions) => void;
+    /**
+     * android print with encoder
+     * @param text
+     */
     printRaw: (text: string) => void;
     printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], opts?: PrinterOptions) => void;
 };
@@ -63,13 +94,27 @@ export declare const NetPrinter: {
     closeConn: () => Promise<void>;
     printText: (text: string, opts?: {}) => void;
     printBill: (text: string, opts?: {}) => void;
+    /**
+     * image url
+     * @param imgUrl
+     * @param opts
+     */
     printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
+    /**
+     * base64string, except -> data:image/png;base64,
+     * @param qrCodeBase64
+     * @param opts
+     */
     printQrCode: (qrCodeBase64: string, opts?: PrinterImageOptions) => void;
+    /**
+     * Android print with encoder
+     * @param text
+     */
     printRaw: (text: string) => void;
     /**
      * `columnWidth`
      * 80mm => 46 character
-     * 58mm => ...
+     * 58mm => 30 character
      */
     printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], opts?: PrinterOptions) => void;
 };

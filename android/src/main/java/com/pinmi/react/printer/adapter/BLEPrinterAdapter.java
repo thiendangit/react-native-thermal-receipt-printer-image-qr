@@ -1,29 +1,28 @@
 package com.pinmi.react.printer.adapter;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import static android.app.Activity.RESULT_OK;
+import android.graphics.BitmapFactory;
 /**
  * Created by xiesubin on 2017/9/21.
  */
@@ -34,13 +33,20 @@ public class BLEPrinterAdapter implements PrinterAdapter{
     private static BLEPrinterAdapter mInstance;
 
 
-    private String LOG_TAG = "RNBLEPrinter";
+    private final String LOG_TAG = "RNBLEPrinter";
 
     private BluetoothDevice mBluetoothDevice;
     private BluetoothSocket mBluetoothSocket;
 
 
     private ReactApplicationContext mContext;
+
+    private final static char ESC_CHAR = 0x1B;
+    private static final byte[] SELECT_BIT_IMAGE_MODE = { 0x1B, 0x2A, 33 };
+    private final static byte[] SET_LINE_SPACE_24 = new byte[] { ESC_CHAR, 0x33, 24 };
+    private final static byte[] SET_LINE_SPACE_32 = new byte[] { ESC_CHAR, 0x33, 32 };
+    private final static byte[] LINE_FEED = new byte[] { 0x0A };
+    private static final byte[] CENTER_ALIGN = { 0x1B, 0X61, 0X31 };
 
 
 
@@ -186,13 +192,157 @@ public class BLEPrinterAdapter implements PrinterAdapter{
         }).start();
     }
 
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            myBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
+    }
+
     @Override
     public void printImageData(String imageUrl, Callback errorCallback) {
+        final Bitmap bitmapImage = getBitmapFromURL(imageUrl);
 
+        if(bitmapImage == null) {
+            errorCallback.invoke("image not found");
+            return;
+        }
+
+        if (this.mBluetoothSocket == null) {
+            errorCallback.invoke("bluetooth connection is not built, may be you forgot to connectPrinter");
+            return;
+        }
+
+        final BluetoothSocket socket = this.mBluetoothSocket;
+
+        try {
+            int[][] pixels = getPixelsSlow(bitmapImage);
+
+            OutputStream printerOutputStream = socket.getOutputStream();
+
+            printerOutputStream.write(SET_LINE_SPACE_24);
+            printerOutputStream.write(CENTER_ALIGN);
+
+            for (int y = 0; y < pixels.length; y += 24) {
+                // Like I said before, when done sending data,
+                // the printer will resume to normal text printing
+                printerOutputStream.write(SELECT_BIT_IMAGE_MODE);
+                // Set nL and nH based on the width of the image
+                printerOutputStream.write(new byte[]{(byte)(0x00ff & pixels[y].length)
+                        , (byte)((0xff00 & pixels[y].length) >> 8)});
+                for (int x = 0; x < pixels[y].length; x++) {
+                    // for each stripe, recollect 3 bytes (3 bytes = 24 bits)
+                    printerOutputStream.write(recollectSlice(y, x, pixels));
+                }
+
+                // Do a line feed, if not the printing will resume on the same line
+                printerOutputStream.write(LINE_FEED);
+            }
+            printerOutputStream.write(SET_LINE_SPACE_32);
+            printerOutputStream.write(LINE_FEED);
+
+            printerOutputStream.flush();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "failed to print data");
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void printQrCode(Bitmap imageUrl, Callback errorCallback) {
 
+    }
+
+    private byte[] recollectSlice(int y, int x, int[][] img) {
+        byte[] slices = new byte[] { 0, 0, 0 };
+        for (int yy = y, i = 0; yy < y + 24 && i < 3; yy += 8, i++) {
+            byte slice = 0;
+            for (int b = 0; b < 8; b++) {
+                int yyy = yy + b;
+                if (yyy >= img.length) {
+                    continue;
+                }
+                int col = img[yyy][x];
+                boolean v = shouldPrintColor(col);
+                slice |= (byte) ((v ? 1 : 0) << (7 - b));
+            }
+            slices[i] = slice;
+        }
+        return slices;
+    }
+
+    private boolean shouldPrintColor(int col) {
+        final int threshold = 127;
+        int a, r, g, b, luminance;
+        a = (col >> 24) & 0xff;
+        if (a != 0xff) {// Ignore transparencies
+            return false;
+        }
+        r = (col >> 16) & 0xff;
+        g = (col >> 8) & 0xff;
+        b = col & 0xff;
+
+        luminance = (int) (0.299 * r + 0.587 * g + 0.114 * b);
+
+        return luminance < threshold;
+    }
+
+    public static Bitmap resizeTheImageForPrinting(Bitmap image) {
+        // making logo size 150 or less pixels
+        int width = image.getWidth();
+        int height = image.getHeight();
+        if (width > 200 || height > 200) {
+            if (width > height) {
+                float decreaseSizeBy = (200.0f / width);
+                return getBitmapResized(image, decreaseSizeBy);
+            } else {
+                float decreaseSizeBy = (200.0f / height);
+                return getBitmapResized(image, decreaseSizeBy);
+            }
+        }
+        return image;
+    }
+
+    public static int getRGB(Bitmap bmpOriginal, int col, int row) {
+        // get one pixel color
+        int pixel = bmpOriginal.getPixel(col, row);
+        // retrieve color of all channels
+        int R = Color.red(pixel);
+        int G = Color.green(pixel);
+        int B = Color.blue(pixel);
+        return Color.rgb(R, G, B);
+    }
+
+    public static Bitmap getBitmapResized(Bitmap image, float decreaseSizeBy) {
+        Bitmap resized = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * decreaseSizeBy),
+                (int) (image.getHeight() * decreaseSizeBy), true);
+        return resized;
+    }
+
+    public static int[][] getPixelsSlow(Bitmap image2) {
+
+        Bitmap image = resizeTheImageForPrinting(image2);
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int[][] result = new int[height][width];
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                result[row][col] = getRGB(image, col, row);
+            }
+        }
+        return result;
     }
 }
