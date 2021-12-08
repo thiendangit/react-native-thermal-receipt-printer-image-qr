@@ -34,26 +34,26 @@ const processNewLine = (text: string, maxLength: number): {
   }
 
   return {
-    text: newText,
-    text_tail: newTextTail.trim()
+    text: newText ?? '',
+    text_tail: newTextTail.trim() ?? ''
   }
 };
 
-export const processColumnText = (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], columnStyle: string[]): string => {
-  let new_texts: [string, string, string] = ['', '', ''];
+export const processColumnText = (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], columnStyle: string[] = []): string => {
+  let rest_texts: [string, string, string] = ['', '', ''];
   let result = ''
   texts.map((text, idx) => {
     if (text.length >= columnWidth[idx]) {
       const processedText = processNewLine(text, columnWidth[idx]);
-      result += columnStyle?.[idx] + processAlignText(processedText.text, columnWidth[idx] - processedText.text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
-      new_texts[idx] = processedText.text_tail;
+      result += (columnStyle?.[idx] ?? '') + processAlignText(processedText.text, columnWidth[idx] - processedText.text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
+      rest_texts[idx] = processedText.text_tail;
     } else {
-      result += columnStyle?.[idx] + processAlignText(text.trim(), columnWidth[idx] - text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
+      result += (columnStyle?.[idx] ?? '') + processAlignText(text.trim(), columnWidth[idx] - text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
     }
   });
-  const index_nonEmpty = new_texts.findIndex((new_text) => new_text != '');
+  const index_nonEmpty = rest_texts.findIndex((rest_text) => rest_text != '');
   if (index_nonEmpty !== -1) {
-    result += "\n" + processColumnText(new_texts, columnWidth, columnAliment, columnStyle)
+    result += "\n" + processColumnText(rest_texts, columnWidth, columnAliment, columnStyle)
   }
   return result
 };

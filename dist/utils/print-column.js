@@ -11,6 +11,7 @@ var processAlignText = function (text, restLength, align) {
     return '';
 };
 var processNewLine = function (text, maxLength) {
+    var _a;
     var newText;
     var newTextTail;
     var next_char = text.slice(maxLength, maxLength + 1);
@@ -30,26 +31,28 @@ var processNewLine = function (text, maxLength) {
         }
     }
     return {
-        text: newText,
-        text_tail: newTextTail.trim()
+        text: newText !== null && newText !== void 0 ? newText : '',
+        text_tail: (_a = newTextTail.trim()) !== null && _a !== void 0 ? _a : ''
     };
 };
 export var processColumnText = function (texts, columnWidth, columnAliment, columnStyle) {
-    var new_texts = ['', '', ''];
+    if (columnStyle === void 0) { columnStyle = []; }
+    var rest_texts = ['', '', ''];
     var result = '';
     texts.map(function (text, idx) {
+        var _a, _b;
         if (text.length >= columnWidth[idx]) {
             var processedText = processNewLine(text, columnWidth[idx]);
-            result += (columnStyle === null || columnStyle === void 0 ? void 0 : columnStyle[idx]) + processAlignText(processedText.text, columnWidth[idx] - processedText.text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
-            new_texts[idx] = processedText.text_tail;
+            result += ((_a = columnStyle === null || columnStyle === void 0 ? void 0 : columnStyle[idx]) !== null && _a !== void 0 ? _a : '') + processAlignText(processedText.text, columnWidth[idx] - processedText.text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
+            rest_texts[idx] = processedText.text_tail;
         }
         else {
-            result += (columnStyle === null || columnStyle === void 0 ? void 0 : columnStyle[idx]) + processAlignText(text.trim(), columnWidth[idx] - text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
+            result += ((_b = columnStyle === null || columnStyle === void 0 ? void 0 : columnStyle[idx]) !== null && _b !== void 0 ? _b : '') + processAlignText(text.trim(), columnWidth[idx] - text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
         }
     });
-    var index_nonEmpty = new_texts.findIndex(function (new_text) { return new_text != ''; });
+    var index_nonEmpty = rest_texts.findIndex(function (rest_text) { return rest_text != ''; });
     if (index_nonEmpty !== -1) {
-        result += "\n" + processColumnText(new_texts, columnWidth, columnAliment, columnStyle);
+        result += "\n" + processColumnText(rest_texts, columnWidth, columnAliment, columnStyle);
     }
     return result;
 };

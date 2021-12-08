@@ -186,6 +186,11 @@ export const USBPrinter = {
       );
     }
   },
+  /**
+   * `columnWidth`
+   * 80mm => 46 character
+   * 58mm => 30 character
+   */
   printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], columnStyle: string[], opts: PrinterOptions = {}): void => {
     const result = processColumnText(texts, columnWidth, columnAliment, columnStyle)
     RNUSBPrinter.printRawData(textTo64Buffer(result, opts), (error: Error) =>
@@ -300,6 +305,11 @@ export const BLEPrinter = {
       );
     }
   },
+  /**
+   * `columnWidth`
+   * 80mm => 46 character
+   * 58mm => 30 character
+   */
   printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], columnStyle: string[], opts: PrinterOptions = {}): void => {
     const result = processColumnText(texts, columnWidth, columnAliment, columnStyle)
     if (Platform.OS === "ios") {
@@ -422,7 +432,7 @@ export const NetPrinter = {
    * 80mm => 46 character
    * 58mm => 30 character
    */
-  printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], columnStyle: string[], opts: PrinterOptions = {}): void => {
+  printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], columnStyle: string[] = [], opts: PrinterOptions = {}): void => {
     const result = processColumnText(texts, columnWidth, columnAliment, columnStyle)
     if (Platform.OS === "ios") {
       const processedText = textPreprocessingIOS(result, false, false);
