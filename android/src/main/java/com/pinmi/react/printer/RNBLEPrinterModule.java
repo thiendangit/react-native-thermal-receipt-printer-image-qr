@@ -1,5 +1,8 @@
 package com.pinmi.react.printer;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -68,17 +71,17 @@ public class RNBLEPrinterModule extends ReactContextBaseJavaModule implements RN
         adapter.printRawData(base64Data, errorCallback);
     }
 
-    @ReactMethod
     @Override
     public void printImageData(String imageUrl, Callback errorCallback) {
         Log.v("imageUrl", imageUrl);
         adapter.printImageData(imageUrl, errorCallback);
     }
 
-    @ReactMethod
     @Override
     public void printQrCode(String imageUrl, Callback errorCallback) {
-
+        byte[] decodedString = Base64.decode(imageUrl, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        adapter.printQrCode(decodedByte, errorCallback);
     }
 
     @ReactMethod
