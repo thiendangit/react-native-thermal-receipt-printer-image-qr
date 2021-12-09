@@ -5,7 +5,7 @@ export interface PrinterOptions {
     tailingLine?: boolean;
     encoding?: string;
 }
-declare const COMMANDS: {
+declare const PRINTER_COMMANDS: {
     LF: string;
     ESC: string;
     FS: string;
