@@ -1,5 +1,6 @@
 # react-native-thermal-receipt-printer-image-qr
-
+![npm](https://img.shields.io/npm/dw/react-native-thermal-receipt-printer-image-qr?logo=github)
+![npm](https://img.shields.io/npm/v/react-native-thermal-receipt-printer-image-qr?color=green&logo=npm&logoColor=green)
 - I fork this for my quickly project, this is not the official project.
 - Fork of `react-native-thermal-receipt-printer` and add implement :
 <br />
