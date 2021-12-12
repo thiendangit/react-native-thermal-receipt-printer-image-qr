@@ -109,7 +109,7 @@ export const HomeScreen = ({route}: any) => {
   }, [selectedValue]);
 
   const handleConnectSelectedPrinter = async () => {
-    // setLoading(true);
+    setLoading(true);
     const connect = async () => {
       try {
         switch (
@@ -138,12 +138,11 @@ export const HomeScreen = ({route}: any) => {
               console.log('connect -> status', status);
               Alert.alert(
                 'Connect successfully!',
-                `Connected to ${status.device_name ?? 'Printers'} !`,
+                `Connected to ${status.host ?? 'Printers'} !`,
               );
               // setConnected(true);
             } catch (err) {
               Alert.alert('Connect failed!', `${err} !`);
-              console.log(err);
             }
             break;
           case 'usb':

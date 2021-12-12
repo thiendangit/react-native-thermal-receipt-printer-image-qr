@@ -5784,6 +5784,11 @@ react-native-permissions@^2.0.2:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.2.2.tgz#3d2a63f6b7d6be52fc86e30f77412a9566283028"
   integrity sha512-ihf4shQDSX5Oo9ChQXb9kr13mmyyNem5MaEvOpr3dCjhBOBWyEMztXm9/uPK1Qg5PsNpaYLa1KpcPZDCw87LXg==
 
+react-native-ping@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/react-native-ping/-/react-native-ping-1.2.6.tgz#94699c3f2c10ee879434ae6bd7355a0ce9f3d961"
+  integrity sha512-yntRkKXrNKf+27mZA2R4CJxU7yQPrN/EVoGzuCX5PL4qvEUx1aD9acpUX3wey3BAIWRmDjklcOVFazS+OR07Wg==
+
 react-native-qrcode-scanner@^1.5.4:
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/react-native-qrcode-scanner/-/react-native-qrcode-scanner-1.5.4.tgz#5e96189260942db3287739545eb3f6a16f7c0178"
@@ -5831,11 +5836,10 @@ react-native-svg@^12.1.1:
   dependencies:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
-    
-react-native-thermal-receipt-printer-image-qr@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/react-native-thermal-receipt-printer-image-qr/-/react-native-thermal-receipt-printer-image-qr-0.1.2.tgz#843ce266b34e19b88647fc176d86ec2503917446"
-  integrity sha512-grZ8yYvI7Kk7XZG7GNuxMAGstb+v1uqznx5szvCSrBc26UeeP6v/gE6idO6JQweQKnDBklFYN6GSGLsirOSWvw==
+
+"react-native-thermal-receipt-printer-image-qr@https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr.git":
+  version "0.1.4"
+  resolved "https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr.git#0fac4f5aab72b5b8372ef9df3bc689e78104de04"
   dependencies:
     buffer "^5.6.0"
     iconv-lite "^0.6.2"

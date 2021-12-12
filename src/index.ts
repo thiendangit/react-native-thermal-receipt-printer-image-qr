@@ -3,6 +3,7 @@ import {NativeModules, NativeEventEmitter, Platform} from "react-native";
 import * as EPToolkit from "./utils/EPToolkit";
 import {processColumnText} from './utils/print-column';
 import {COMMANDS} from './utils/printer-commands';
+import {connectToHost} from './utils/net-connect';
 
 const RNUSBPrinter = NativeModules.RNUSBPrinter;
 const RNBLEPrinter = NativeModules.RNBLEPrinter;
@@ -39,7 +40,6 @@ export interface IBLEPrinter {
 }
 
 export interface INetPrinter {
-  device_name: string;
   host: string;
   port: number;
 }
@@ -342,14 +342,20 @@ const NetPrinter = {
       )
     ),
 
-  connectPrinter: (host: string, port: number): Promise<INetPrinter> =>
-    new Promise((resolve, reject) =>
-      RNNetPrinter.connectPrinter(
-        host,
-        port,
-        (printer: INetPrinter) => resolve(printer),
-        (error: Error) => reject(error)
-      )
+  connectPrinter: (host: string, port: number, timeout?: number): Promise<INetPrinter> =>
+    new Promise(async (resolve, reject) => {
+        try {
+          await connectToHost(host, timeout)
+          RNNetPrinter.connectPrinter(
+            host,
+            port,
+            (printer: INetPrinter) => resolve(printer),
+            (error: Error) => reject(error)
+          )
+        } catch (error) {
+          reject(error?.message || `Connect to ${host} fail`)
+        }
+      }
     ),
 
   closeConn: (): Promise<void> =>

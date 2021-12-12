@@ -6,7 +6,6 @@ export interface PrinterOptions {
     tailingLine?: boolean;
     encoding?: string;
 }
-export default COMMANDS;
 export interface PrinterImageOptions {
     beep?: boolean;
     cut?: boolean;
@@ -28,7 +27,6 @@ export interface IBLEPrinter {
     inner_mac_address: string;
 }
 export interface INetPrinter {
-    device_name: string;
     host: string;
     port: number;
 }
@@ -37,7 +35,7 @@ export declare enum ColumnAliment {
     CENTER = 1,
     RIGHT = 2
 }
-export declare const USBPrinter: {
+declare const USBPrinter: {
     init: () => Promise<void>;
     getDeviceList: () => Promise<IUSBPrinter[]>;
     connectPrinter: (vendorId: string, productId: string) => Promise<IUSBPrinter>;
@@ -68,7 +66,7 @@ export declare const USBPrinter: {
      */
     printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], columnStyle: string[], opts?: PrinterOptions) => void;
 };
-export declare const BLEPrinter: {
+declare const BLEPrinter: {
     init: () => Promise<void>;
     getDeviceList: () => Promise<IBLEPrinter[]>;
     connectPrinter: (inner_mac_address: string) => Promise<IBLEPrinter>;
@@ -99,10 +97,10 @@ export declare const BLEPrinter: {
      */
     printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], columnStyle: string[], opts?: PrinterOptions) => void;
 };
-export declare const NetPrinter: {
+declare const NetPrinter: {
     init: () => Promise<void>;
     getDeviceList: () => Promise<INetPrinter[]>;
-    connectPrinter: (host: string, port: number) => Promise<INetPrinter>;
+    connectPrinter: (host: string, port: number, timeout?: number | undefined) => Promise<INetPrinter>;
     closeConn: () => Promise<void>;
     printText: (text: string, opts?: {}) => void;
     printBill: (text: string, opts?: PrinterOptions) => void;
@@ -130,7 +128,8 @@ export declare const NetPrinter: {
      */
     printColumnsText: (texts: string[], columnWidth: number[], columnAliment: (ColumnAliment)[], columnStyle?: string[], opts?: PrinterOptions) => void;
 };
-export declare const NetPrinterEventEmitter: NativeEventEmitter;
+declare const NetPrinterEventEmitter: NativeEventEmitter;
+export { COMMANDS, NetPrinter, BLEPrinter, USBPrinter, NetPrinterEventEmitter };
 export declare enum RN_THERMAL_RECEIPT_PRINTER_EVENTS {
     EVENT_NET_PRINTER_SCANNED_SUCCESS = "scannerResolved",
     EVENT_NET_PRINTER_SCANNING = "scannerRunning",

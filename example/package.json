@@ -19,6 +19,7 @@
     "react": "17.0.2",
     "react-native": "0.66.2",
     "react-native-camera": "^4.2.1",
+    "react-native-ping": "^1.2.6",
     "react-native-qrcode-scanner": "^1.5.4",
     "react-native-qrcode-svg": "^6.1.1",
     "react-native-safe-area-context": "^3.3.2",
@@ -26,8 +27,8 @@
     "react-native-sunmi-inner-scanner": "^0.1.8",
     "react-native-sunmi-v2-printer": "^1.0.1",
     "react-native-svg": "^12.1.1",
-    "react-native-vector-icons": "^9.0.0",
-    "react-native-thermal-receipt-printer-image-qr": "^0.1.2"
+    "react-native-thermal-receipt-printer-image-qr": "https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr.git",
+    "react-native-vector-icons": "^9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
