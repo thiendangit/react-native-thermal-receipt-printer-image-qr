@@ -1,6 +1,6 @@
 {
   "name": "react-native-thermal-receipt-printer-image-qr",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Fork of react-native-thermal-receipt-printer. A React Native Library to support USB/BLE/Net printer",
   "main": "dist/index.js",
   "source": "dist/index.js",
@@ -28,7 +28,13 @@
     "net",
     "printer",
     "rn",
-    "android"
+    "android",
+    "image",
+    "qr",
+    "base64",
+    "receipt",
+    "bill",
+    "invoice"
   ],
   "dependencies": {
     "buffer": "^5.6.0",
