@@ -137,7 +137,7 @@ RCT_EXPORT_METHOD(printImageData:(NSString *)imgUrl
     }
 }
 
-RCT_EXPORT_METHOD(printQrCode:(NSString *)base64Qr
+RCT_EXPORT_METHOD(printImageBase64:(NSString *)base64Qr
                   printerOptions:(NSDictionary *)options
                   fail:(RCTResponseSenderBlock)errorCallback) {
     @try {

@@ -162,14 +162,14 @@ const USBPrinter = {
   },
   /**
    * base64string, except -> data:image/png;base64,
-   * @param qrCodeBase64
+   * @param Base64
    * @param opts
    */
-  printQrCode: function (qrCodeBase64: string, opts: PrinterImageOptions = {}) {
+  printImageBase64: function (Base64: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
-      RNUSBPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
+      RNUSBPrinter.printImageBase64(Base64, opts, (error: Error) => console.warn(error));
     } else {
-      RNUSBPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+      RNUSBPrinter.printImageBase64(Base64, (error: Error) => console.warn(error));
     }
   },
   /**
@@ -275,20 +275,20 @@ const BLEPrinter = {
   },
   /**
    * base64string, except -> data:image/png;base64,
-   * @param qrCodeBase64
+   * @param Base64
    * @param opts
    */
-  printQrCode: function (qrCodeBase64: string, opts: PrinterImageOptions = {}) {
+  printImageBase64: function (Base64: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
       /**
        * just development
        */
-      RNBLEPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
+      RNBLEPrinter.printImageBase64(Base64, opts, (error: Error) => console.warn(error));
     } else {
       /**
        * just development
        */
-      RNBLEPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+      RNBLEPrinter.printImageBase64(Base64, (error: Error) => console.warn(error));
     }
   },
   /**
@@ -407,14 +407,14 @@ const NetPrinter = {
   },
   /**
    * base64string, except -> data:image/png;base64,
-   * @param qrCodeBase64
+   * @param Base64
    * @param opts
    */
-  printQrCode: function (qrCodeBase64: string, opts: PrinterImageOptions = {}) {
+  printImageBase64: function (Base64: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
-      RNNetPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
+      RNNetPrinter.printImageBase64(Base64, opts, (error: Error) => console.warn(error));
     } else {
-      RNNetPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+      RNNetPrinter.printImageBase64(Base64, (error: Error) => console.warn(error));
     }
   },
 

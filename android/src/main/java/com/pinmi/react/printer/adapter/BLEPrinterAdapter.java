@@ -262,7 +262,7 @@ public class BLEPrinterAdapter implements PrinterAdapter{
     }
 
     @Override
-    public void printQrCode(final Bitmap bitmapImage, Callback errorCallback) {
+    public void printImageBase64(final Bitmap bitmapImage, Callback errorCallback) {
         if(bitmapImage == null) {
             errorCallback.invoke("image not found");
             return;
