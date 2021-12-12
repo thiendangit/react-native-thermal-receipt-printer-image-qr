@@ -77,7 +77,7 @@ import {
   COMMANDS
 } from 'react-native-thermal-receipt-printer-image-qr';
 ```
-[See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/print-image-for-BLU/dist/utils/printer-commands.js)
+[See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/dist/utils/printer-commands.js)
 
 ## Example
 **`Print Columns Text`**
@@ -100,7 +100,7 @@ let orderList = [
   }
   Printer.printBill(`${CENTER}Thank you\n`);
 ```
-[See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/print-image-for-BLU/example/src/HomeScreen.tsx)
+[See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/example/src/HomeScreen.tsx)
 
 ## Troubleshoot
 
