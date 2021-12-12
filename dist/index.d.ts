@@ -50,10 +50,10 @@ declare const USBPrinter: {
     printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
     /**
      * base64string, except -> data:image/png;base64,
-     * @param qrCodeBase64
+     * @param Base64
      * @param opts
      */
-    printQrCode: (qrCodeBase64: string, opts?: PrinterImageOptions) => void;
+    printImageBase64: (Base64: string, opts?: PrinterImageOptions) => void;
     /**
      * android print with encoder
      * @param text
@@ -81,10 +81,10 @@ declare const BLEPrinter: {
     printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
     /**
      * base64string, except -> data:image/png;base64,
-     * @param qrCodeBase64
+     * @param Base64
      * @param opts
      */
-    printQrCode: (qrCodeBase64: string, opts?: PrinterImageOptions) => void;
+    printImageBase64: (Base64: string, opts?: PrinterImageOptions) => void;
     /**
      * android print with encoder
      * @param text
@@ -112,10 +112,10 @@ declare const NetPrinter: {
     printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
     /**
      * base64string, except -> data:image/png;base64,
-     * @param qrCodeBase64
+     * @param Base64
      * @param opts
      */
-    printQrCode: (qrCodeBase64: string, opts?: PrinterImageOptions) => void;
+    printImageBase64: (Base64: string, opts?: PrinterImageOptions) => void;
     /**
      * Android print with encoder
      * @param text

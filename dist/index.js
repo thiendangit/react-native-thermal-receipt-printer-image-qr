@@ -155,16 +155,16 @@ var USBPrinter = {
     },
     /**
      * base64string, except -> data:image/png;base64,
-     * @param qrCodeBase64
+     * @param Base64
      * @param opts
      */
-    printQrCode: function (qrCodeBase64, opts) {
+    printImageBase64: function (Base64, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            RNUSBPrinter.printQrCode(qrCodeBase64, opts, function (error) { return console.warn(error); });
+            RNUSBPrinter.printImageBase64(Base64, opts, function (error) { return console.warn(error); });
         }
         else {
-            RNUSBPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
+            RNUSBPrinter.printImageBase64(Base64, function (error) { return console.warn(error); });
         }
     },
     /**
@@ -259,22 +259,22 @@ var BLEPrinter = {
     },
     /**
      * base64string, except -> data:image/png;base64,
-     * @param qrCodeBase64
+     * @param Base64
      * @param opts
      */
-    printQrCode: function (qrCodeBase64, opts) {
+    printImageBase64: function (Base64, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
             /**
              * just development
              */
-            RNBLEPrinter.printQrCode(qrCodeBase64, opts, function (error) { return console.warn(error); });
+            RNBLEPrinter.printImageBase64(Base64, opts, function (error) { return console.warn(error); });
         }
         else {
             /**
              * just development
              */
-            RNBLEPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
+            RNBLEPrinter.printImageBase64(Base64, function (error) { return console.warn(error); });
         }
     },
     /**
@@ -388,16 +388,16 @@ var NetPrinter = {
     },
     /**
      * base64string, except -> data:image/png;base64,
-     * @param qrCodeBase64
+     * @param Base64
      * @param opts
      */
-    printQrCode: function (qrCodeBase64, opts) {
+    printImageBase64: function (Base64, opts) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            RNNetPrinter.printQrCode(qrCodeBase64, opts, function (error) { return console.warn(error); });
+            RNNetPrinter.printImageBase64(Base64, opts, function (error) { return console.warn(error); });
         }
         else {
-            RNNetPrinter.printQrCode(qrCodeBase64, function (error) { return console.warn(error); });
+            RNNetPrinter.printImageBase64(Base64, function (error) { return console.warn(error); });
         }
     },
     /**
