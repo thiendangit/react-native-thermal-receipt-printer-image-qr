@@ -198,7 +198,7 @@ export const HomeScreen = ({route}: any) => {
           Printer.printText('090 3399 031 555\n');
           Printer.printText(`Date : 15- 09 - 2021 /15 : 29 : 57 / Admin`);
           Printer.printText(`Product : Total - 4 / No. (1,2,3,4)\n`);
-          Printer.printText(`${CENTER}${COMMANDS.HORIZONTAL_LINE.HR_80MM}${CENTER}\n`);
+          Printer.printText(`${CENTER}${COMMANDS.HORIZONTAL_LINE.HR_80MM}${CENTER}`);
           let orderList = [
             ["1. Skirt Palas Labuh Muslimah Fashion", "x2", "500$"],
             ["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4222", "500$"],
@@ -210,11 +210,11 @@ export const HomeScreen = ({route}: any) => {
           let columnWidth = [46 - (7 + 12), 7, 12]
           const header = ['Product list', 'Qty', 'Price']
           Printer.printColumnsText(header, columnWidth, columnAliment, [`${BOLD_ON}`, '', '']);
-          Printer.printText(`\n${CENTER}${COMMANDS.HORIZONTAL_LINE.HR3_80MM}${CENTER}\n`);
+          Printer.printText(`${CENTER}${COMMANDS.HORIZONTAL_LINE.HR3_80MM}${CENTER}`);
           for (let i in orderList) {
             Printer.printColumnsText(orderList[i], columnWidth, columnAliment, [`${BOLD_OFF}`, '', '']);
           }
-          Printer.printText(`\n\n`);
+          Printer.printText(`\n`);
           Printer.printImageBase64(qrProcessed, {
             // ios
             imageWidth: 100
