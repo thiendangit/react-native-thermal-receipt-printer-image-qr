@@ -14,8 +14,8 @@
 **`Print Image & QR with bluetooth in IOS just implement not tested yet`**
 
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
-<img src="image/receipt.jpg" alt="bill" width="250" height="580"/>
-<img src="image/screenshot.jpg" alt="screenshot" width="250" height="580"/>
+<img src="image/receipt.jpg" alt="bill" width="270" height="580"/>
+<img src="image/screenshot.jpg" alt="screenshot" width="270" height="580"/>
 </div>
 
 ## Installation
