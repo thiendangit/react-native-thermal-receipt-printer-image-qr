@@ -215,7 +215,7 @@ export const HomeScreen = ({route}: any) => {
             Printer.printColumnsText(orderList[i], columnWidth, columnAliment, [`${BOLD_OFF}`, '', '']);
           }
           Printer.printText(`\n\n`);
-          Printer.printQrCode(qrProcessed, {
+          Printer.printImageBase64(qrProcessed, {
             // ios
             imageWidth: 100
           })

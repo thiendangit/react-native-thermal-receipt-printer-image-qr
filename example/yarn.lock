@@ -5832,7 +5832,7 @@ react-native-svg@^12.1.1:
 
 "react-native-thermal-receipt-printer-image-qr@https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr.git":
   version "0.1.4"
-  resolved "https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr.git#0cd81de193b5d2e6864432c27d7160c6d148a468"
+  resolved "https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr.git#3d2d79c6d9e748dc8296a8524a36fdc604c429c6"
   dependencies:
     buffer "^5.6.0"
     iconv-lite "^0.6.2"
