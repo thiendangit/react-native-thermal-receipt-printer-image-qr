@@ -161,7 +161,7 @@ const USBPrinter = {
     }
   },
   /**
-   * base64string, except -> data:image/png;base64,
+   * base 64 string
    * @param Base64
    * @param opts
    */
@@ -274,7 +274,7 @@ const BLEPrinter = {
     }
   },
   /**
-   * base64string, except -> data:image/png;base64,
+   * base 64 string
    * @param Base64
    * @param opts
    */
@@ -406,7 +406,7 @@ const NetPrinter = {
     }
   },
   /**
-   * base64string, except -> data:image/png;base64,
+   * base 64 string
    * @param Base64
    * @param opts
    */
