@@ -1,19 +1,17 @@
 # react-native-thermal-receipt-printer-image-qr
 
-- I fork this for my quickly project print with NET(android & ios) and USB(android) with Image & QR.
-- Bluetooth just using old structure (ios & android) not implement printing with Image & QR.
+- I fork this for my quickly project, this is not the official project.
 - Fork of `react-native-thermal-receipt-printer` and add implement :
-    + Image & QR : :heavy_check_mark:
-    + Fix cut : :heavy_check_mark:
-    + Print With Column : :heavy_check_mark:
-  ## Implement
+## Implement
 
 | Implement    | Android            | IOS                |
 | ---------- | ------------------ | ------------------ |
-| Image & QR | :heavy_check_mark: |   :heavy_check_mark: But print bluetooth just implement not tested yet              |
+| Image & QR | :heavy_check_mark: |   :exclamation: |
 | Fix cut | :heavy_check_mark: | :heavy_check_mark: |
 | Print With Column | :heavy_check_mark: | :heavy_check_mark: |
 | NET Connect Timeout | :heavy_check_mark: | :heavy_check_mark: |
+
+**`Print Image & QR with bluetooth in IOS just implement not tested yet`**
 
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
 <img src="image/receipt.jpg.jpg" alt="bill" width="250" height="580"/>
@@ -39,7 +37,7 @@ cd ios && pod install
 react-native link react-native-thermal-receipt-printer-image-qr
 ```
 
-# API Reference
+## API Reference
 ```tsx
     init: () => Promise;
     getDeviceList: () => Promise;
@@ -73,7 +71,7 @@ react-native link react-native-thermal-receipt-printer-image-qr
     printColumnsText: (texts: string[], columnWidth: number[], columnAliment: ColumnAliment[], columnStyle?: string[], opts?: PrinterOptions) => void;
 ```
 
-# Styling
+## Styling
 ```js
 import {
   COMMANDS
@@ -81,7 +79,7 @@ import {
 ```
 [See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/print-image-for-BLU/dist/utils/printer-commands.js)
 
-# Example
+## Example
 **`Print Columns Text`**
 ```tsx
 const BOLD_ON = COMMANDS.TEXT_FORMAT.TXT_BOLD_ON;
