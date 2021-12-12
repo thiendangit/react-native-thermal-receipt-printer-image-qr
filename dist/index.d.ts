@@ -49,7 +49,7 @@ declare const USBPrinter: {
      */
     printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
     /**
-     * base64string, except -> data:image/png;base64,
+     * base 64 string
      * @param Base64
      * @param opts
      */
@@ -80,7 +80,7 @@ declare const BLEPrinter: {
      */
     printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
     /**
-     * base64string, except -> data:image/png;base64,
+     * base 64 string
      * @param Base64
      * @param opts
      */
@@ -111,7 +111,7 @@ declare const NetPrinter: {
      */
     printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
     /**
-     * base64string, except -> data:image/png;base64,
+     * base 64 string
      * @param Base64
      * @param opts
      */
