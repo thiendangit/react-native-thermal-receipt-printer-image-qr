@@ -12,11 +12,11 @@ var __assign = (this && this.__assign) || function () {
 import { NativeModules, NativeEventEmitter, Platform } from "react-native";
 import * as EPToolkit from "./utils/EPToolkit";
 import { processColumnText } from './utils/print-column';
-import PRINTER_COMMANDS from './utils/printer-commands';
+import { COMMANDS } from './utils/printer-commands';
 var RNUSBPrinter = NativeModules.RNUSBPrinter;
 var RNBLEPrinter = NativeModules.RNBLEPrinter;
 var RNNetPrinter = NativeModules.RNNetPrinter;
-export var COMMANDS = PRINTER_COMMANDS;
+export default COMMANDS;
 export var ColumnAliment;
 (function (ColumnAliment) {
     ColumnAliment[ColumnAliment["LEFT"] = 0] = "LEFT";

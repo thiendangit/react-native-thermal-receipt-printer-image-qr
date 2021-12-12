@@ -1,5 +1,11 @@
 import {ColumnAliment} from "..";
 
+/**
+ * Using to add space for each row
+ * @param text
+ * @param restLength
+ * @param align
+ */
 const processAlignText = (text: string, restLength: number, align: ColumnAliment): string => {
   if (align === 0) {
     return text + " ".repeat(restLength);
@@ -11,6 +17,11 @@ const processAlignText = (text: string, restLength: number, align: ColumnAliment
   return '';
 };
 
+/**
+ * process down line when length of text is bigger than columnWidthAtRow
+ * @param text
+ * @param maxLength
+ */
 const processNewLine = (text: string, maxLength: number): {
   text: string;
   text_tail: string;
@@ -43,12 +54,13 @@ export const processColumnText = (texts: string[], columnWidth: number[], column
   let rest_texts: [string, string, string] = ['', '', ''];
   let result = ''
   texts.map((text, idx) => {
+    const columnWidthAtRow = Math.round(columnWidth?.[idx]);
     if (text.length >= columnWidth[idx]) {
-      const processedText = processNewLine(text, columnWidth[idx]);
-      result += (columnStyle?.[idx] ?? '') + processAlignText(processedText.text, columnWidth[idx] - processedText.text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
+      const processedText = processNewLine(text, columnWidthAtRow);
+      result += (columnStyle?.[idx] ?? '') + processAlignText(processedText.text, columnWidthAtRow - processedText.text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
       rest_texts[idx] = processedText.text_tail;
     } else {
-      result += (columnStyle?.[idx] ?? '') + processAlignText(text.trim(), columnWidth[idx] - text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
+      result += (columnStyle?.[idx] ?? '') + processAlignText(text.trim(), columnWidthAtRow - text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
     }
   });
   const index_nonEmpty = rest_texts.findIndex((rest_text) => rest_text != '');

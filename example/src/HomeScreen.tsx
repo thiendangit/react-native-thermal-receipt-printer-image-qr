@@ -108,11 +108,6 @@ export const HomeScreen = ({route}: any) => {
     getListDevices().then();
   }, [selectedValue]);
 
-  const handlePort = (port?: string): string => {
-    return ((Platform.OS === 'ios' ? 9100 : parseInt(port || '9100', 10)) ||
-      '9100') as string;
-  };
-
   const handleConnectSelectedPrinter = async () => {
     // setLoading(true);
     const connect = async () => {
@@ -138,11 +133,7 @@ export const HomeScreen = ({route}: any) => {
               // await NetPrinter.closeConn();
               // setConnected(!connected);
               // }
-              const status = await NetPrinter.connectPrinter(
-                selectedNetPrinter?.host || '',
-                // @ts-ignore
-                handlePort(selectedNetPrinter?.port),
-              );
+              const status = await NetPrinter.connectPrinter(selectedNetPrinter?.host || '', 9100);
               setLoading(false);
               console.log('connect -> status', status);
               Alert.alert(

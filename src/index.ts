@@ -2,7 +2,7 @@ import {NativeModules, NativeEventEmitter, Platform} from "react-native";
 
 import * as EPToolkit from "./utils/EPToolkit";
 import {processColumnText} from './utils/print-column';
-import PRINTER_COMMANDS from './utils/printer-commands';
+import {COMMANDS} from './utils/printer-commands';
 
 const RNUSBPrinter = NativeModules.RNUSBPrinter;
 const RNBLEPrinter = NativeModules.RNBLEPrinter;
@@ -14,8 +14,6 @@ export interface PrinterOptions {
   tailingLine?: boolean;
   encoding?: string;
 }
-
-export const COMMANDS = PRINTER_COMMANDS;
 
 export interface PrinterImageOptions {
   beep?: boolean;
@@ -108,7 +106,7 @@ const textPreprocessingIOS = (text: string, canCut = true, beep = true) => {
 //   return buffer.toString("base64");
 // };
 
-export const USBPrinter = {
+const USBPrinter = {
   init: (): Promise<void> =>
     new Promise((resolve, reject) =>
       RNUSBPrinter.init(
@@ -199,7 +197,7 @@ export const USBPrinter = {
   },
 };
 
-export const BLEPrinter = {
+const BLEPrinter = {
   init: (): Promise<void> =>
     new Promise((resolve, reject) =>
       RNBLEPrinter.init(
@@ -327,7 +325,7 @@ export const BLEPrinter = {
   },
 };
 
-export const NetPrinter = {
+const NetPrinter = {
   init: (): Promise<void> =>
     new Promise((resolve, reject) =>
       RNNetPrinter.init(
@@ -449,7 +447,15 @@ export const NetPrinter = {
   },
 };
 
-export const NetPrinterEventEmitter = new NativeEventEmitter(RNNetPrinter);
+const NetPrinterEventEmitter = new NativeEventEmitter(RNNetPrinter);
+
+export {
+  COMMANDS,
+  NetPrinter,
+  BLEPrinter,
+  USBPrinter,
+  NetPrinterEventEmitter
+};
 
 export enum RN_THERMAL_RECEIPT_PRINTER_EVENTS {
   EVENT_NET_PRINTER_SCANNED_SUCCESS = "scannerResolved",

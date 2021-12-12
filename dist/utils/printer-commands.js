@@ -1,4 +1,4 @@
-var PRINTER_COMMANDS = {
+export var COMMANDS = {
     LF: '\x0a',
     ESC: '\x1b',
     FS: '\x1c',
@@ -202,4 +202,3 @@ var PRINTER_COMMANDS = {
         TXT_ALIGN_RT: '\x1b\x61\x02',
     }
 };
-export default PRINTER_COMMANDS;
