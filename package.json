@@ -8,7 +8,8 @@
     "pods": "cd example && pod-install --quiet",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn && yarn pods",
-    "build": "rimraf ./dist && tsc"
+    "build": "rimraf ./dist && tsc",
+    "test": "jshint hello.js"
   },
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
     "@types/react": "^16.9.46",
     "@types/react-native": "^0.63.9",
     "@types/react-test-renderer": "^16.9.3",
+    "jshint": "^2.13.1",
     "pod-install": "^0.1.10",
     "react": "^16.13.1",
     "react-native": "^0.64.1",
