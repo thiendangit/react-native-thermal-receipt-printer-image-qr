@@ -2,7 +2,8 @@ import {NativeModules, NativeEventEmitter, Platform} from "react-native";
 
 import * as EPToolkit from "./utils/EPToolkit";
 import {processColumnText} from './utils/print-column';
-import PRINTER_COMMANDS from './utils/printer-commands';
+import {COMMANDS} from './utils/printer-commands';
+import {connectToHost} from './utils/net-connect';
 
 const RNUSBPrinter = NativeModules.RNUSBPrinter;
 const RNBLEPrinter = NativeModules.RNBLEPrinter;
@@ -14,8 +15,6 @@ export interface PrinterOptions {
   tailingLine?: boolean;
   encoding?: string;
 }
-
-export const COMMANDS = PRINTER_COMMANDS;
 
 export interface PrinterImageOptions {
   beep?: boolean;
@@ -41,7 +40,6 @@ export interface IBLEPrinter {
 }
 
 export interface INetPrinter {
-  device_name: string;
   host: string;
   port: number;
 }
@@ -108,7 +106,7 @@ const textPreprocessingIOS = (text: string, canCut = true, beep = true) => {
 //   return buffer.toString("base64");
 // };
 
-export const USBPrinter = {
+const USBPrinter = {
   init: (): Promise<void> =>
     new Promise((resolve, reject) =>
       RNUSBPrinter.init(
@@ -163,15 +161,15 @@ export const USBPrinter = {
     }
   },
   /**
-   * base64string, except -> data:image/png;base64,
-   * @param qrCodeBase64
+   * base 64 string
+   * @param Base64
    * @param opts
    */
-  printQrCode: function (qrCodeBase64: string, opts: PrinterImageOptions = {}) {
+  printImageBase64: function (Base64: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
-      RNUSBPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
+      RNUSBPrinter.printImageBase64(Base64, opts, (error: Error) => console.warn(error));
     } else {
-      RNUSBPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+      RNUSBPrinter.printImageBase64(Base64, (error: Error) => console.warn(error));
     }
   },
   /**
@@ -199,7 +197,7 @@ export const USBPrinter = {
   },
 };
 
-export const BLEPrinter = {
+const BLEPrinter = {
   init: (): Promise<void> =>
     new Promise((resolve, reject) =>
       RNBLEPrinter.init(
@@ -276,21 +274,21 @@ export const BLEPrinter = {
     }
   },
   /**
-   * base64string, except -> data:image/png;base64,
-   * @param qrCodeBase64
+   * base 64 string
+   * @param Base64
    * @param opts
    */
-  printQrCode: function (qrCodeBase64: string, opts: PrinterImageOptions = {}) {
+  printImageBase64: function (Base64: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
       /**
        * just development
        */
-      RNBLEPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
+      RNBLEPrinter.printImageBase64(Base64, opts, (error: Error) => console.warn(error));
     } else {
       /**
        * just development
        */
-      RNBLEPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+      RNBLEPrinter.printImageBase64(Base64, (error: Error) => console.warn(error));
     }
   },
   /**
@@ -327,7 +325,7 @@ export const BLEPrinter = {
   },
 };
 
-export const NetPrinter = {
+const NetPrinter = {
   init: (): Promise<void> =>
     new Promise((resolve, reject) =>
       RNNetPrinter.init(
@@ -344,14 +342,20 @@ export const NetPrinter = {
       )
     ),
 
-  connectPrinter: (host: string, port: number): Promise<INetPrinter> =>
-    new Promise((resolve, reject) =>
-      RNNetPrinter.connectPrinter(
-        host,
-        port,
-        (printer: INetPrinter) => resolve(printer),
-        (error: Error) => reject(error)
-      )
+  connectPrinter: (host: string, port: number, timeout?: number): Promise<INetPrinter> =>
+    new Promise(async (resolve, reject) => {
+        try {
+          await connectToHost(host, timeout)
+          RNNetPrinter.connectPrinter(
+            host,
+            port,
+            (printer: INetPrinter) => resolve(printer),
+            (error: Error) => reject(error)
+          )
+        } catch (error) {
+          reject(error?.message || `Connect to ${host} fail`)
+        }
+      }
     ),
 
   closeConn: (): Promise<void> =>
@@ -402,15 +406,15 @@ export const NetPrinter = {
     }
   },
   /**
-   * base64string, except -> data:image/png;base64,
-   * @param qrCodeBase64
+   * base 64 string
+   * @param Base64
    * @param opts
    */
-  printQrCode: function (qrCodeBase64: string, opts: PrinterImageOptions = {}) {
+  printImageBase64: function (Base64: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
-      RNNetPrinter.printQrCode(qrCodeBase64, opts, (error: Error) => console.warn(error));
+      RNNetPrinter.printImageBase64(Base64, opts, (error: Error) => console.warn(error));
     } else {
-      RNNetPrinter.printQrCode(qrCodeBase64, (error: Error) => console.warn(error));
+      RNNetPrinter.printImageBase64(Base64, (error: Error) => console.warn(error));
     }
   },
 
@@ -449,7 +453,15 @@ export const NetPrinter = {
   },
 };
 
-export const NetPrinterEventEmitter = new NativeEventEmitter(RNNetPrinter);
+const NetPrinterEventEmitter = new NativeEventEmitter(RNNetPrinter);
+
+export {
+  COMMANDS,
+  NetPrinter,
+  BLEPrinter,
+  USBPrinter,
+  NetPrinterEventEmitter
+};
 
 export enum RN_THERMAL_RECEIPT_PRINTER_EVENTS {
   EVENT_NET_PRINTER_SCANNED_SUCCESS = "scannerResolved",

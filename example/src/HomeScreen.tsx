@@ -108,13 +108,8 @@ export const HomeScreen = ({route}: any) => {
     getListDevices().then();
   }, [selectedValue]);
 
-  const handlePort = (port?: string): string => {
-    return ((Platform.OS === 'ios' ? 9100 : parseInt(port || '9100', 10)) ||
-      '9100') as string;
-  };
-
   const handleConnectSelectedPrinter = async () => {
-    // setLoading(true);
+    setLoading(true);
     const connect = async () => {
       try {
         switch (
@@ -138,21 +133,16 @@ export const HomeScreen = ({route}: any) => {
               // await NetPrinter.closeConn();
               // setConnected(!connected);
               // }
-              const status = await NetPrinter.connectPrinter(
-                selectedNetPrinter?.host || '',
-                // @ts-ignore
-                handlePort(selectedNetPrinter?.port),
-              );
+              const status = await NetPrinter.connectPrinter(selectedNetPrinter?.host || '', 9100);
               setLoading(false);
               console.log('connect -> status', status);
               Alert.alert(
                 'Connect successfully!',
-                `Connected to ${status.device_name ?? 'Printers'} !`,
+                `Connected to ${status.host ?? 'Printers'} !`,
               );
               // setConnected(true);
             } catch (err) {
               Alert.alert('Connect failed!', `${err} !`);
-              console.log(err);
             }
             break;
           case 'usb':
@@ -225,7 +215,7 @@ export const HomeScreen = ({route}: any) => {
             Printer.printColumnsText(orderList[i], columnWidth, columnAliment, [`${BOLD_OFF}`, '', '']);
           }
           Printer.printText(`\n\n`);
-          Printer.printQrCode(qrProcessed, {
+          Printer.printImageBase64(qrProcessed, {
             // ios
             imageWidth: 100
           })

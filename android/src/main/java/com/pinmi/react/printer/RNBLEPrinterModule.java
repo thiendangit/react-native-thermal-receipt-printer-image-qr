@@ -1,5 +1,8 @@
 package com.pinmi.react.printer;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -77,8 +80,10 @@ public class RNBLEPrinterModule extends ReactContextBaseJavaModule implements RN
 
     @ReactMethod
     @Override
-    public void printQrCode(String imageUrl, Callback errorCallback) {
-
+    public void printImageBase64(String base64, Callback errorCallback) {
+        byte[] decodedString = Base64.decode(base64, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        adapter.printImageBase64(decodedByte, errorCallback);
     }
 
     @ReactMethod

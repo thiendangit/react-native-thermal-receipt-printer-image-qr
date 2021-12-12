@@ -1,4 +1,4 @@
-const PRINTER_COMMANDS = {
+export const COMMANDS = {
   LF: '\x0a',
   ESC: '\x1b',
   FS: '\x1c',
@@ -203,5 +203,3 @@ const PRINTER_COMMANDS = {
     TXT_ALIGN_RT: '\x1b\x61\x02',
   }
 }
-
-export default PRINTER_COMMANDS;

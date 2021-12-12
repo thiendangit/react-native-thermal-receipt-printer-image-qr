@@ -286,7 +286,7 @@ public class USBPrinterAdapter implements PrinterAdapter {
                 // Set nL and nH based on the width of the image
                 byte[] row = new byte[]{(byte)(0x00ff & pixels[y].length)
                         , (byte)((0xff00 & pixels[y].length) >> 8)};
-                
+
                 mUsbDeviceConnection.bulkTransfer(mEndPoint, row, row.length, 100000);
 
                 for (int x = 0; x < pixels[y].length; x++) {
@@ -310,7 +310,7 @@ public class USBPrinterAdapter implements PrinterAdapter {
     }
 
     @Override
-    public void printQrCode(final Bitmap bitmapImage, Callback errorCallback) {
+    public void printImageBase64(final Bitmap bitmapImage, Callback errorCallback) {
         if(bitmapImage == null) {
             errorCallback.invoke("image not found");
             return;

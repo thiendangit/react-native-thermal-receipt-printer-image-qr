@@ -1,4 +1,4 @@
-declare const PRINTER_COMMANDS: {
+export declare const COMMANDS: {
     LF: string;
     ESC: string;
     FS: string;
@@ -197,4 +197,3 @@ declare const PRINTER_COMMANDS: {
         TXT_ALIGN_RT: string;
     };
 };
-export default PRINTER_COMMANDS;
