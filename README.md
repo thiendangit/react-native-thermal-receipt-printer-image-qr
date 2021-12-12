@@ -2,7 +2,7 @@
 
 - I fork this for my quickly project, this is not the official project.
 - Fork of `react-native-thermal-receipt-printer` and add implement :
-## Implement
+<br />
 
 | Implement    | Android            | IOS                |
 | ---------- | ------------------ | ------------------ |
@@ -11,8 +11,8 @@
 | Print With Column | :heavy_check_mark: | :heavy_check_mark: |
 | NET Connect Timeout | :heavy_check_mark: | :heavy_check_mark: |
 
-**`Print Image & QR with bluetooth in IOS just implement not tested yet`**
-
+:grey_exclamation:**`Print Image & QR with bluetooth in IOS just implement not tested yet`**
+<br /> <br />
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
 <img src="image/receipt.jpg" alt="bill" width="270" height="580"/>
 <img src="image/screenshot.jpg" alt="screenshot" width="270" height="580"/>
