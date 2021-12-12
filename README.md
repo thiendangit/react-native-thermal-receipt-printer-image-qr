@@ -16,7 +16,7 @@
 | NET Connect Timeout | :heavy_check_mark: | :heavy_check_mark: |
 
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
-<img src="image/bill.jpg" alt="bill" width="250" height="580"/>
+<img src="image/receipt.jpg.jpg" alt="bill" width="250" height="580"/>
 <img src="image/screenshot.jpg" alt="screenshot" width="250" height="580"/>
 </div>
 
