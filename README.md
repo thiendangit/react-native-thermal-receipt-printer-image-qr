@@ -42,6 +42,10 @@ react-native link react-native-thermal-receipt-printer-image-qr
 ```tsx
     init: () => Promise;
     getDeviceList: () => Promise;
+    /**
+     * `timeout`
+     * @default 4000ms
+     */
     connectPrinter: (host: string, port: number, timeout?: number | undefined) => Promise;
     closeConn: () => Promise;
     /**
@@ -53,7 +57,7 @@ react-native link react-native-thermal-receipt-printer-image-qr
      */
     printBill: (text: string, opts?: PrinterOptions) => void;
     /**
-     * print with Image url
+     * print with image url
      */
     printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
     /**
@@ -91,15 +95,15 @@ let orderList = [
   ["3. Women Crew Neck Button Down Ruffle Collar Loose Blouse", "x1", "30000000000000$"],
   ["4. Retro Buttons Up Full Sleeve Loose", "x10", "200$"],
   ["5. Retro Buttons Up", "x10", "200$"],
-  ];
-  let columnAliment = [ColumnAliment.LEFT, ColumnAliment.CENTER, ColumnAliment.RIGHT];
-  let columnWidth = [46 - (7 + 12), 7, 12]
-  const header = ['Product list', 'Qty', 'Price']
-  Printer.printColumnsText(header, columnWidth, columnAliment, [`${BOLD_ON}`, '', '']);
-  for (let i in orderList) {
-    Printer.printColumnsText(orderList[i], columnWidth, columnAliment, [`${BOLD_OFF}`, '', '']);
-  }
-  Printer.printBill(`${CENTER}Thank you\n`);
+];
+let columnAliment = [ColumnAliment.LEFT, ColumnAliment.CENTER, ColumnAliment.RIGHT];
+let columnWidth = [46 - (7 + 12), 7, 12]
+const header = ['Product list', 'Qty', 'Price']
+Printer.printColumnsText(header, columnWidth, columnAliment, [`${BOLD_ON}`, '', '']);
+for (let i in orderList) {
+  Printer.printColumnsText(orderList[i], columnWidth, columnAliment, [`${BOLD_OFF}`, '', '']);
+}
+Printer.printBill(`${CENTER}Thank you\n`);
 ```
 [See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/example/src/HomeScreen.tsx)
 
