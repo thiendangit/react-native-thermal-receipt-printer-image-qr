@@ -453,7 +453,7 @@ const NetPrinter = {
   },
 };
 
-const NetPrinterEventEmitter = new NativeEventEmitter(RNNetPrinter);
+const NetPrinterEventEmitter = Platform.OS === 'ios' ? new NativeEventEmitter(RNNetPrinter) : new NativeEventEmitter();
 
 export {
   COMMANDS,
