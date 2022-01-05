@@ -433,7 +433,7 @@ var NetPrinter = {
         }
     },
 };
-var NetPrinterEventEmitter = new NativeEventEmitter(RNNetPrinter);
+var NetPrinterEventEmitter = Platform.OS === 'ios' ? new NativeEventEmitter(RNNetPrinter) : new NativeEventEmitter();
 export { COMMANDS, NetPrinter, BLEPrinter, USBPrinter, NetPrinterEventEmitter };
 export var RN_THERMAL_RECEIPT_PRINTER_EVENTS;
 (function (RN_THERMAL_RECEIPT_PRINTER_EVENTS) {
