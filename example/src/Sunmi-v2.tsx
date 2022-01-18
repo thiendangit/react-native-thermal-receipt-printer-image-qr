@@ -5,14 +5,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   DeviceEventEmitter,
-  ScrollView,
-  Linking, Alert,
+  ScrollView, Alert,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 // @ts-ignore
 import SunmiV2Printer from 'react-native-sunmi-v2-printer';
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import {RNCamera} from 'react-native-camera';
+// @ts-ignore
 import {SunmiScannerView} from 'react-native-sunmi-inner-scanner';
 
 const SunmiScreen = () => {
@@ -196,10 +194,6 @@ const styles = StyleSheet.create({
   textBold: {
     fontWeight: '500',
     color: '#000',
-  },
-  buttonText: {
-    fontSize: 21,
-    color: 'rgb(0,122,255)',
   },
   buttonTouchable: {
     padding: 16,
