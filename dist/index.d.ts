@@ -6,16 +6,19 @@ export interface PrinterOptions {
     tailingLine?: boolean;
     encoding?: string;
 }
+export declare enum PrinterWidth {
+    '58mm' = 58,
+    '80mm' = 80
+}
 export interface PrinterImageOptions {
     beep?: boolean;
     cut?: boolean;
     tailingLine?: boolean;
     encoding?: string;
-    /**
-     * ios only
-     */
     imageWidth?: number;
     paddingX?: number;
+    printerWidthType?: PrinterWidth;
+    imageHeight?: number;
 }
 export interface IUSBPrinter {
     device_name: string;

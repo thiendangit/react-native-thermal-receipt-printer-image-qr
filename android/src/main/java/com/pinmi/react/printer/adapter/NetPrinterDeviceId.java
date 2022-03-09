@@ -36,7 +36,6 @@ public class NetPrinterDeviceId extends PrinterDeviceId {
 
         if (!host.equals(that.host)) return false;
         return port.equals(that.port);
-
     }
 
     @Override

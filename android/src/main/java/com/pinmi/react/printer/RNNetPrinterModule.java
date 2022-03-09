@@ -9,7 +9,6 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.pinmi.react.printer.adapter.BLEPrinterDeviceId;
 import com.pinmi.react.printer.adapter.NetPrinterAdapter;
 import com.pinmi.react.printer.adapter.NetPrinterDeviceId;
 import com.pinmi.react.printer.adapter.PrinterAdapter;
@@ -23,7 +22,7 @@ public class RNNetPrinterModule extends ReactContextBaseJavaModule implements RN
     private PrinterAdapter adapter;
     private ReactApplicationContext reactContext;
 
-    public RNNetPrinterModule(ReactApplicationContext reactContext){
+    public RNNetPrinterModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
     }
@@ -32,7 +31,7 @@ public class RNNetPrinterModule extends ReactContextBaseJavaModule implements RN
     @Override
     public void init(Callback successCallback, Callback errorCallback) {
         this.adapter = NetPrinterAdapter.getInstance();
-        this.adapter.init(reactContext,  successCallback, errorCallback);
+        this.adapter.init(reactContext, successCallback, errorCallback);
     }
 
     @ReactMethod
@@ -67,19 +66,19 @@ public class RNNetPrinterModule extends ReactContextBaseJavaModule implements RN
 
     @ReactMethod
     @Override
-    public void printImageData(String imageUrl, Callback errorCallback) {
+    public void printImageData(String imageUrl, int imageWidth, int imageHeight, Callback errorCallback) {
         Log.v("imageUrl", imageUrl);
-        adapter.printImageData(imageUrl, errorCallback);
+        adapter.printImageData(imageUrl, imageWidth, imageHeight, errorCallback);
     }
 
     @ReactMethod
     @Override
-    public void printImageBase64(String base64, Callback errorCallback) {
+    public void printImageBase64(String base64, int imageWidth, int imageHeight, Callback errorCallback) {
         // String imageBase64 = "data:image/png;base64," + imageUrl;
         // String base64ImageProcessed = imageUrl.split(",")[1];
         byte[] decodedString = Base64.decode(base64, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        adapter.printImageBase64(decodedByte, errorCallback);
+        adapter.printImageBase64(decodedByte, imageWidth, imageHeight, errorCallback);
     }
 
     @Override

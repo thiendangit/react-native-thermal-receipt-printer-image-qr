@@ -192,33 +192,30 @@ export const HomeScreen = ({route}: any) => {
         // Can print android and ios with the same type or with encoder for android
         if (Platform.OS === 'android' || Platform.OS === 'ios') {
           const Printer: typeof NetPrinter = printerList[selectedValue];
-          // Printer.printImage(`https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg`);
-          // Printer.printText(`${CENTER}${BOLD_ON} BILLING ${BOLD_OFF}\n`);
-          // Printer.printText(`${CENTER}${address}${OFF_CENTER}`);
-          // Printer.printText('090 3399 031 555\n');
-          // Printer.printText(`Date : 15- 09 - 2021 /15 : 29 : 57 / Admin`);
-          // Printer.printText(`Product : Total - 4 / No. (1,2,3,4)\n`);
-          // Printer.printText(`${CENTER}${COMMANDS.HORIZONTAL_LINE.HR_80MM}${CENTER}`);
-          // let orderList = [
-          //   ["1. Skirt Palas Labuh Muslimah Fashion", "x2", "500$"],
-          //   ["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4222", "500$"],
-          //   ["3. Women Crew Neck Button Down Ruffle Collar Loose Blouse", "x1", "30000000000000$"],
-          //   ["4. Retro Buttons Up Full Sleeve Loose", "x10", "200$"],
-          //   ["5. Retro Buttons Up", "x10", "200$"],
-          // ];
-          // let columnAliment = [ColumnAliment.LEFT, ColumnAliment.CENTER, ColumnAliment.RIGHT];
-          // let columnWidth = [46 - (7 + 12), 7, 12]
-          // const header = ['Product list', 'Qty', 'Price']
-          // Printer.printColumnsText(header, columnWidth, columnAliment, [`${BOLD_ON}`, '', '']);
-          // Printer.printText(`${CENTER}${COMMANDS.HORIZONTAL_LINE.HR3_80MM}${CENTER}`);
-          // for (let i in orderList) {
-          //   Printer.printColumnsText(orderList[i], columnWidth, columnAliment, [`${BOLD_OFF}`, '', '']);
-          // }
-          // Printer.printText(`\n`);
-          Printer.printImage('https://d5nunyagcicgy.cloudfront.net/external_assets/hero_examples/hair_beach_v391182663/original.jpeg', {
-            // ios
-            imageWidth: 575
-          })
+          Printer.printImage(`https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg`);
+          Printer.printText(`${CENTER}${BOLD_ON} BILLING ${BOLD_OFF}\n`);
+          Printer.printText(`${CENTER}${address}${OFF_CENTER}`);
+          Printer.printText('090 3399 031 555\n');
+          Printer.printText(`Date : 15- 09 - 2021 /15 : 29 : 57 / Admin`);
+          Printer.printText(`Product : Total - 4 / No. (1,2,3,4)\n`);
+          Printer.printText(`${CENTER}${COMMANDS.HORIZONTAL_LINE.HR_80MM}${CENTER}`);
+          let orderList = [
+            ["1. Skirt Palas Labuh Muslimah Fashion", "x2", "500$"],
+            ["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4222", "500$"],
+            ["3. Women Crew Neck Button Down Ruffle Collar Loose Blouse", "x1", "30000000000000$"],
+            ["4. Retro Buttons Up Full Sleeve Loose", "x10", "200$"],
+            ["5. Retro Buttons Up", "x10", "200$"],
+          ];
+          let columnAliment = [ColumnAliment.LEFT, ColumnAliment.CENTER, ColumnAliment.RIGHT];
+          let columnWidth = [46 - (7 + 12), 7, 12]
+          const header = ['Product list', 'Qty', 'Price']
+          Printer.printColumnsText(header, columnWidth, columnAliment, [`${BOLD_ON}`, '', '']);
+          Printer.printText(`${CENTER}${COMMANDS.HORIZONTAL_LINE.HR3_80MM}${CENTER}`);
+          for (let i in orderList) {
+            Printer.printColumnsText(orderList[i], columnWidth, columnAliment, [`${BOLD_OFF}`, '', '']);
+          }
+          Printer.printText(`\n`);
+          Printer.printImage(qrProcessed)
           Printer.printBill(`${CENTER}Thank you\n`, {beep: false});
         } else {
           // optional for android
@@ -241,13 +238,15 @@ export const HomeScreen = ({route}: any) => {
     }
   };
 
-  const gotoSunmi = async () => {
-    if (Platform.OS === 'ios') {
-      Alert.alert('this feature just support for sunmi devices');
-    } else {
-      navigate('Sunmi');
-    }
-  };
+  const handlePrintBillWithImage = async () => {
+    const Printer: typeof NetPrinter = printerList[selectedValue];
+    Printer.printImage('https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/3a/bd/b5/the-food-bill.jpg', {
+      imageWidth: 575,
+      // imageHeight: 1000,
+      // paddingX: 100
+    })
+    Printer.printBill("", {beep: false});
+  }
 
   const handleChangePrinterType = async (type: keyof typeof printerList) => {
     setSelectedValue(prev => {
@@ -332,7 +331,7 @@ export const HomeScreen = ({route}: any) => {
       {/* Printers List */}
       <View style={styles.section} >
         {selectedValue === 'net' ? _renderNet() : _renderOther()}
-        {/* Buttons */}
+        {/* Buttons Connect */}
         <View
           style={[
             styles.buttonContainer,
@@ -342,37 +341,36 @@ export const HomeScreen = ({route}: any) => {
           ]} >
           <TouchableOpacity
             style={styles.button}
-            // disabled={!selectedPrinter?.device_name}
             onPress={handleConnectSelectedPrinter} >
             <AntIcon name={'disconnect'} color={'white'} size={18} />
             <Text style={styles.text} >Connect</Text >
           </TouchableOpacity >
         </View >
+        {/* Button Print sample */}
         <View style={styles.buttonContainer} >
           <TouchableOpacity
             style={[styles.button, {backgroundColor: 'blue'}]}
-            // disabled={!selectedPrinter?.device_name}
             onPress={handlePrint} >
             <AntIcon name={'printer'} color={'white'} size={18} />
             <Text style={styles.text} >Print sample</Text >
           </TouchableOpacity >
         </View >
+        {/* Button Print bill */}
         <View style={styles.buttonContainer} >
           <TouchableOpacity
             style={[styles.button, {backgroundColor: 'blue'}]}
-            // disabled={!selectedPrinter?.device_name}
             onPress={handlePrintBill} >
             <AntIcon name={'profile'} color={'white'} size={18} />
             <Text style={styles.text} >Print bill</Text >
           </TouchableOpacity >
         </View >
+        {/* Button Print bill With Image */}
         <View style={styles.buttonContainer} >
           <TouchableOpacity
             style={[styles.button, {backgroundColor: 'blue'}]}
-            // disabled={!selectedPrinter?.device_name}
-            onPress={gotoSunmi} >
-            <AntIcon name={'printer'} color={'white'} size={18} />
-            <Text style={styles.text} >Sunmi print</Text >
+            onPress={handlePrintBillWithImage} >
+            <AntIcon name={'profile'} color={'white'} size={18} />
+            <Text style={styles.text} >Print bill With Image</Text >
           </TouchableOpacity >
         </View >
         <View style={styles.qr} >
