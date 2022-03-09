@@ -192,7 +192,10 @@ export const HomeScreen = ({route}: any) => {
         // Can print android and ios with the same type or with encoder for android
         if (Platform.OS === 'android' || Platform.OS === 'ios') {
           const Printer: typeof NetPrinter = printerList[selectedValue];
-          Printer.printImage(`https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg`);
+          Printer.printImage(`https://sportshub.cbsistatic.com/i/2021/04/09/9df74632-fde2-421e-bc6f-d4bf631bf8e5/one-piece-trafalgar-law-wano-anime-1246430.jpg`, {
+            imageWidth: 300,
+            imageHeight: 300,
+          });
           Printer.printText(`${CENTER}${BOLD_ON} BILLING ${BOLD_OFF}\n`);
           Printer.printText(`${CENTER}${address}${OFF_CENTER}`);
           Printer.printText('090 3399 031 555\n');
@@ -215,7 +218,10 @@ export const HomeScreen = ({route}: any) => {
             Printer.printColumnsText(orderList[i], columnWidth, columnAliment, [`${BOLD_OFF}`, '', '']);
           }
           Printer.printText(`\n`);
-          Printer.printImage(qrProcessed)
+          Printer.printImageBase64(qrProcessed, {
+            imageWidth: 50,
+            imageHeight: 50,
+          })
           Printer.printBill(`${CENTER}Thank you\n`, {beep: false});
         } else {
           // optional for android

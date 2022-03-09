@@ -16,9 +16,9 @@ export interface PrinterImageOptions {
     tailingLine?: boolean;
     encoding?: string;
     imageWidth?: number;
-    paddingX?: number;
-    printerWidthType?: PrinterWidth;
     imageHeight?: number;
+    printerWidthType?: PrinterWidth;
+    paddingX?: number;
 }
 export interface IUSBPrinter {
     device_name: string;
