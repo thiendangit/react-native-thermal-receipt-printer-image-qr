@@ -106,7 +106,7 @@ for (let i in orderList) {
 Printer.printBill(`${CENTER}Thank you\n`);
 ```
 
-**`Print Columns Text`**
+**`Print image`**
 ```tsx
 Printer.printImage('https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/3a/bd/b5/the-food-bill.jpg', {
 imageWidth: 575,
