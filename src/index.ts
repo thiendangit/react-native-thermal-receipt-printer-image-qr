@@ -26,10 +26,9 @@ export interface PrinterImageOptions {
   cut?: boolean;
   tailingLine?: boolean;
   encoding?: string;
+  imageHeight?: number,
   imageWidth?: number,
   printerWidthType?: PrinterWidth,
-  // only android
-  imageHeight?: number,
   // only ios
   paddingX?: number,
 }
@@ -416,10 +415,7 @@ const NetPrinter = {
    * @param Base64
    * @param opts
    */
-  printImageBase64: function (Base64: string, opts: PrinterImageOptions = {
-    imageWidth: 0,
-    imageHeight: 0
-  }) {
+  printImageBase64: function (Base64: string, opts: PrinterImageOptions = {}) {
     if (Platform.OS === "ios") {
       RNNetPrinter.printImageBase64(Base64, opts, (error: Error) => console.warn(error));
     } else {

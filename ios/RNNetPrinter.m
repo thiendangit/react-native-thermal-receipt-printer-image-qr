@@ -233,36 +233,40 @@ RCT_EXPORT_METHOD(printImageBase64:(NSString *)base64Qr
 
 -(UIImage *)getPrintImage:(UIImage *)image
            printerOptions:(NSDictionary *)options {
+       NSNumber* nWidth = [options valueForKey:@"imageWidth"];
+       NSNumber* nHeight = [options valueForKey:@"imageHeight"];
+       NSNumber* nPaddingX = [options valueForKey:@"paddingX"];
 
-    NSNumber* nWidth = [options valueForKey:@"imageWidth"];
-    NSNumber* nPaddingX = [options valueForKey:@"paddingX"];
+       CGFloat newWidth = 150;
+       if(nWidth != nil) {
+           newWidth = [nWidth floatValue];
+       }
 
-    CGFloat newWidth = 150;
-    if(nWidth != nil) {
-        newWidth = [nWidth floatValue];
-    }
+       CGFloat newHeight = image.size.height;
+       if(nHeight != nil) {
+           newHeight = [nHeight floatValue];
+       }
 
-    CGFloat paddingX = 0;
-    if(nPaddingX != nil) {
-        paddingX = [nPaddingX floatValue];
-    }
+       CGFloat paddingX = 250;
+       if(nPaddingX != nil) {
+           paddingX = [nPaddingX floatValue];
+       }
 
-    CGFloat newHeight = (newWidth / image.size.width) * image.size.height;
-    CGSize newSize = CGSizeMake(newWidth, newHeight);
-    UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
-    CGImageRef immageRef = image.CGImage;
-    CGContextDrawImage(context, CGRectMake(0, 0, newWidth, newHeight), immageRef);
-    CGImageRef newImageRef = CGBitmapContextCreateImage(context);
-    UIImage* newImage = [UIImage imageWithCGImage:newImageRef];
+       CGFloat _newHeight = newHeight;
+       CGSize newSize = CGSizeMake(newWidth, _newHeight);
+       UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0);
+       CGContextRef context = UIGraphicsGetCurrentContext();
+       CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
+       CGImageRef immageRef = image.CGImage;
+       CGContextDrawImage(context, CGRectMake(0, 0, newWidth, newHeight), immageRef);
+       CGImageRef newImageRef = CGBitmapContextCreateImage(context);
+       UIImage* newImage = [UIImage imageWithCGImage:newImageRef];
 
-    CGImageRelease(newImageRef);
-    UIGraphicsEndImageContext();
+       CGImageRelease(newImageRef);
+       UIGraphicsEndImageContext();
 
-    UIImage* paddedImage = [self addImagePadding:newImage paddingX:paddingX paddingY:0];
-    return paddedImage;
-
+       UIImage* paddedImage = [self addImagePadding:newImage paddingX:paddingX paddingY:0];
+       return paddedImage;
 }
 
 -(UIImage *)addImagePadding:(UIImage * )image
