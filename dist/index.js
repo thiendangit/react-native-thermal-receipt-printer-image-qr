@@ -403,10 +403,7 @@ var NetPrinter = {
      */
     printImageBase64: function (Base64, opts) {
         var _a, _b;
-        if (opts === void 0) { opts = {
-            imageWidth: 0,
-            imageHeight: 0
-        }; }
+        if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
             RNNetPrinter.printImageBase64(Base64, opts, function (error) { return console.warn(error); });
         }
