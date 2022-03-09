@@ -1,8 +1,9 @@
 package com.pinmi.react.printer.adapter;
+import static com.pinmi.react.printer.adapter.UtilsImage.getPixelsSlow;
+import static com.pinmi.react.printer.adapter.UtilsImage.recollectSlice;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.util.Base64;
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.BitmapFactory;
-
 import androidx.annotation.RequiresApi;
 
 /**
@@ -37,22 +37,21 @@ import androidx.annotation.RequiresApi;
 public class NetPrinterAdapter implements PrinterAdapter {
     private static NetPrinterAdapter mInstance;
     private ReactApplicationContext mContext;
-    private String LOG_TAG = "RNNetPrinter";
+    private final String LOG_TAG = "RNNetPrinter";
     private NetPrinterDevice mNetDevice;
 
     // {TODO- support other ports later}
-    // private int[] PRINTER_ON_PORTS = {515, 3396, 9100, 9303};
 
-    private int[] PRINTER_ON_PORTS = { 9100 };
+    private final int[] PRINTER_ON_PORTS = {9100};
     private static final String EVENT_SCANNER_RESOLVED = "scannerResolved";
     private static final String EVENT_SCANNER_RUNNING = "scannerRunning";
 
     private final static char ESC_CHAR = 0x1B;
-    private static byte[] SELECT_BIT_IMAGE_MODE = { 0x1B, 0x2A, 33 };
-    private final static byte[] SET_LINE_SPACE_24 = new byte[] { ESC_CHAR, 0x33, 24 };
-    private final static byte[] SET_LINE_SPACE_32 = new byte[] { ESC_CHAR, 0x33, 32 };
-    private final static byte[] LINE_FEED = new byte[] { 0x0A };
-    private static byte[] CENTER_ALIGN = { 0x1B, 0X61, 0X31 };
+    private static final byte[] SELECT_BIT_IMAGE_MODE = {0x1B, 0x2A, 33};
+    private final static byte[] SET_LINE_SPACE_24 = new byte[]{ESC_CHAR, 0x33, 24};
+    private final static byte[] SET_LINE_SPACE_32 = new byte[]{ESC_CHAR, 0x33, 32};
+    private final static byte[] LINE_FEED = new byte[]{0x0A};
+    private static final byte[] CENTER_ALIGN = {0x1B, 0X61, 0X31};
 
     private Socket mSocket;
 
@@ -82,8 +81,7 @@ public class NetPrinterAdapter implements PrinterAdapter {
         // printer");
         // Use emitter instancee get devicelist to non block main thread
         this.scan();
-        List<PrinterDevice> printerDevices = new ArrayList<>();
-        return printerDevices;
+        return new ArrayList<>();
     }
 
     private void scan() {
@@ -216,7 +214,7 @@ public class NetPrinterAdapter implements PrinterAdapter {
     @Override
     public void printRawData(String rawBase64Data, Callback errorCallback) {
         if (this.mSocket == null) {
-            errorCallback.invoke("bluetooth connection is not built, may be you forgot to connectPrinter");
+            errorCallback.invoke("Net connection is not built, may be you forgot to connectPrinter");
             return;
         }
         final String rawData = rawBase64Data;
@@ -260,23 +258,22 @@ public class NetPrinterAdapter implements PrinterAdapter {
 
 
     @Override
-    public void printImageData(final String imageUrl, Callback errorCallback) {
+    public void printImageData(final String imageUrl, int imageWidth, int imageHeight, Callback errorCallback) {
         final Bitmap bitmapImage = getBitmapFromURL(imageUrl);
 
-        if(bitmapImage == null) {
+        if (bitmapImage == null) {
             errorCallback.invoke("image not found");
             return;
         }
 
         if (this.mSocket == null) {
-            errorCallback.invoke("bluetooth connection is not built, may be you forgot to connectPrinter");
+            errorCallback.invoke("Net connection is not built, may be you forgot to connectPrinter");
             return;
         }
 
         final Socket socket = this.mSocket;
-
         try {
-            int[][] pixels = getPixelsSlow(bitmapImage);
+            int[][] pixels = getPixelsSlow(bitmapImage, imageWidth, imageHeight);
 
             OutputStream printerOutputStream = socket.getOutputStream();
 
@@ -288,8 +285,8 @@ public class NetPrinterAdapter implements PrinterAdapter {
                 // the printer will resume to normal text printing
                 printerOutputStream.write(SELECT_BIT_IMAGE_MODE);
                 // Set nL and nH based on the width of the image
-                printerOutputStream.write(new byte[]{(byte)(0x00ff & pixels[y].length)
-                        , (byte)((0xff00 & pixels[y].length) >> 8)});
+                printerOutputStream.write(new byte[]{(byte) (0x00ff & pixels[y].length)
+                        , (byte) ((0xff00 & pixels[y].length) >> 8)});
                 for (int x = 0; x < pixels[y].length; x++) {
                     // for each stripe, recollect 3 bytes (3 bytes = 24 bits)
                     printerOutputStream.write(recollectSlice(y, x, pixels));
@@ -309,21 +306,21 @@ public class NetPrinterAdapter implements PrinterAdapter {
     }
 
     @Override
-    public void printImageBase64(final Bitmap bitmapImage, Callback errorCallback) {
-        if(bitmapImage == null) {
+    public void printImageBase64(final Bitmap bitmapImage, int imageWidth, int imageHeight, Callback errorCallback) {
+        if (bitmapImage == null) {
             errorCallback.invoke("image not found");
             return;
         }
 
         if (this.mSocket == null) {
-            errorCallback.invoke("bluetooth connection is not built, may be you forgot to connectPrinter");
+            errorCallback.invoke("Net connection is not built, may be you forgot to connectPrinter");
             return;
         }
 
         final Socket socket = this.mSocket;
 
         try {
-            int[][] pixels = getPixelsSlow(bitmapImage);
+            int[][] pixels = getPixelsSlow(bitmapImage, imageWidth, imageHeight);
 
             OutputStream printerOutputStream = socket.getOutputStream();
 
@@ -335,8 +332,8 @@ public class NetPrinterAdapter implements PrinterAdapter {
                 // the printer will resume to normal text printing
                 printerOutputStream.write(SELECT_BIT_IMAGE_MODE);
                 // Set nL and nH based on the width of the image
-                printerOutputStream.write(new byte[]{(byte)(0x00ff & pixels[y].length)
-                        , (byte)((0xff00 & pixels[y].length) >> 8)});
+                printerOutputStream.write(new byte[]{(byte) (0x00ff & pixels[y].length)
+                        , (byte) ((0xff00 & pixels[y].length) >> 8)});
                 for (int x = 0; x < pixels[y].length; x++) {
                     // for each stripe, recollect 3 bytes (3 bytes = 24 bits)
                     printerOutputStream.write(recollectSlice(y, x, pixels));
@@ -354,86 +351,4 @@ public class NetPrinterAdapter implements PrinterAdapter {
             e.printStackTrace();
         }
     }
-
-    public static int[][] getPixelsSlow(Bitmap image2) {
-
-        Bitmap image = resizeTheImageForPrinting(image2);
-
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int[][] result = new int[height][width];
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                result[row][col] = getRGB(image, col, row);
-            }
-        }
-        return result;
-    }
-
-    private byte[] recollectSlice(int y, int x, int[][] img) {
-        byte[] slices = new byte[] { 0, 0, 0 };
-        for (int yy = y, i = 0; yy < y + 24 && i < 3; yy += 8, i++) {
-            byte slice = 0;
-            for (int b = 0; b < 8; b++) {
-                int yyy = yy + b;
-                if (yyy >= img.length) {
-                    continue;
-                }
-                int col = img[yyy][x];
-                boolean v = shouldPrintColor(col);
-                slice |= (byte) ((v ? 1 : 0) << (7 - b));
-            }
-            slices[i] = slice;
-        }
-        return slices;
-    }
-
-    private boolean shouldPrintColor(int col) {
-        final int threshold = 127;
-        int a, r, g, b, luminance;
-        a = (col >> 24) & 0xff;
-        if (a != 0xff) {// Ignore transparencies
-            return false;
-        }
-        r = (col >> 16) & 0xff;
-        g = (col >> 8) & 0xff;
-        b = col & 0xff;
-
-        luminance = (int) (0.299 * r + 0.587 * g + 0.114 * b);
-
-        return luminance < threshold;
-    }
-
-    public static Bitmap resizeTheImageForPrinting(Bitmap image) {
-        // making logo size 150 or less pixels
-        int width = image.getWidth();
-        int height = image.getHeight();
-        if (width > 200 || height > 200) {
-            if (width > height) {
-                float decreaseSizeBy = (200.0f / width);
-                return getBitmapResized(image, decreaseSizeBy);
-            } else {
-                float decreaseSizeBy = (200.0f / height);
-                return getBitmapResized(image, decreaseSizeBy);
-            }
-        }
-        return image;
-    }
-
-    public static int getRGB(Bitmap bmpOriginal, int col, int row) {
-        // get one pixel color
-        int pixel = bmpOriginal.getPixel(col, row);
-        // retrieve color of all channels
-        int R = Color.red(pixel);
-        int G = Color.green(pixel);
-        int B = Color.blue(pixel);
-        return Color.rgb(R, G, B);
-    }
-
-    public static Bitmap getBitmapResized(Bitmap image, float decreaseSizeBy) {
-        Bitmap resized = Bitmap.createScaledBitmap(image, (int) (image.getWidth() * decreaseSizeBy),
-                (int) (image.getHeight() * decreaseSizeBy), true);
-        return resized;
-    }
-
 }

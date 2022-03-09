@@ -16,7 +16,7 @@
 <br /> <br />
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
 <img src="image/invoice.jpg" alt="bill" width="270" height="580"/>
-<img src="image/screenshot.jpg" alt="screenshot" width="270" height="580"/>
+<img src="image/_screenshot.jpg" alt="screenshot" width="270" height="580"/>
 </div>
 
 ## Installation
@@ -105,6 +105,16 @@ for (let i in orderList) {
 }
 Printer.printBill(`${CENTER}Thank you\n`);
 ```
+
+**`Print image`**
+```tsx
+Printer.printImage('https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/3a/bd/b5/the-food-bill.jpg', {
+imageWidth: 575,
+// imageHeight: 1000,
+// only ios
+// paddingX: 100
+})
+```
 [See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/example/src/HomeScreen.tsx)
 
 ## Troubleshoot
@@ -143,31 +153,3 @@ and comment out code related to Flipper in `ios/AppDelegate.m`
 | USBPrinter | :heavy_check_mark: |                    |
 | BLEPrinter | :heavy_check_mark: | :heavy_check_mark: |
 | NetPrinter | :heavy_check_mark: | :heavy_check_mark: |
-
-## Development workflow
-
-To get started with the project, run `yarn bootstrap` in the root directory to install the required dependencies for each package:
-
-```sh
-yarn bootstrap
-```
-
-While developing, you can run the [example app](/example/) to test your changes.
-
-To start the packager:
-
-```sh
-yarn example start
-```
-
-To run the example app on Android:
-
-```sh
-yarn example dev-android
-```
-
-To run the example app on iOS:
-
-```sh
-yarn example ios
-```

@@ -63,7 +63,7 @@ export const HomeScreen = ({route}: any) => {
   const [selectedNetPrinter, setSelectedNetPrinter] =
     React.useState<DeviceType>({
       device_name: 'My Net Printer',
-      host: '192.168.0.200', // your host
+      host: '192.168.0.101', // your host
       port: PORT, // your port
       printerType: DevicesEnum.net,
     });
@@ -215,10 +215,7 @@ export const HomeScreen = ({route}: any) => {
             Printer.printColumnsText(orderList[i], columnWidth, columnAliment, [`${BOLD_OFF}`, '', '']);
           }
           Printer.printText(`\n`);
-          Printer.printImageBase64(qrProcessed, {
-            // ios
-            imageWidth: 100
-          })
+          Printer.printImage(qrProcessed)
           Printer.printBill(`${CENTER}Thank you\n`, {beep: false});
         } else {
           // optional for android
@@ -241,13 +238,15 @@ export const HomeScreen = ({route}: any) => {
     }
   };
 
-  const gotoSunmi = async () => {
-    if (Platform.OS === 'ios') {
-      Alert.alert('this feature just support for sunmi devices');
-    } else {
-      navigate('Sunmi');
-    }
-  };
+  const handlePrintBillWithImage = async () => {
+    const Printer: typeof NetPrinter = printerList[selectedValue];
+    Printer.printImage('https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/3a/bd/b5/the-food-bill.jpg', {
+      imageWidth: 575,
+      // imageHeight: 1000,
+      // paddingX: 100
+    })
+    Printer.printBill("", {beep: false});
+  }
 
   const handleChangePrinterType = async (type: keyof typeof printerList) => {
     setSelectedValue(prev => {
@@ -332,7 +331,7 @@ export const HomeScreen = ({route}: any) => {
       {/* Printers List */}
       <View style={styles.section} >
         {selectedValue === 'net' ? _renderNet() : _renderOther()}
-        {/* Buttons */}
+        {/* Buttons Connect */}
         <View
           style={[
             styles.buttonContainer,
@@ -342,37 +341,36 @@ export const HomeScreen = ({route}: any) => {
           ]} >
           <TouchableOpacity
             style={styles.button}
-            // disabled={!selectedPrinter?.device_name}
             onPress={handleConnectSelectedPrinter} >
             <AntIcon name={'disconnect'} color={'white'} size={18} />
             <Text style={styles.text} >Connect</Text >
           </TouchableOpacity >
         </View >
+        {/* Button Print sample */}
         <View style={styles.buttonContainer} >
           <TouchableOpacity
             style={[styles.button, {backgroundColor: 'blue'}]}
-            // disabled={!selectedPrinter?.device_name}
             onPress={handlePrint} >
             <AntIcon name={'printer'} color={'white'} size={18} />
             <Text style={styles.text} >Print sample</Text >
           </TouchableOpacity >
         </View >
+        {/* Button Print bill */}
         <View style={styles.buttonContainer} >
           <TouchableOpacity
             style={[styles.button, {backgroundColor: 'blue'}]}
-            // disabled={!selectedPrinter?.device_name}
             onPress={handlePrintBill} >
             <AntIcon name={'profile'} color={'white'} size={18} />
             <Text style={styles.text} >Print bill</Text >
           </TouchableOpacity >
         </View >
+        {/* Button Print bill With Image */}
         <View style={styles.buttonContainer} >
           <TouchableOpacity
             style={[styles.button, {backgroundColor: 'blue'}]}
-            // disabled={!selectedPrinter?.device_name}
-            onPress={gotoSunmi} >
-            <AntIcon name={'printer'} color={'white'} size={18} />
-            <Text style={styles.text} >Sunmi print</Text >
+            onPress={handlePrintBillWithImage} >
+            <AntIcon name={'profile'} color={'white'} size={18} />
+            <Text style={styles.text} >Print bill With Image</Text >
           </TouchableOpacity >
         </View >
         <View style={styles.qr} >
