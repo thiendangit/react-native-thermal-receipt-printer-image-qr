@@ -7,7 +7,7 @@
 
 | Implement    | Android            | IOS                |
 | ---------- | ------------------ | ------------------ |
-| Image & QR | :heavy_check_mark: |   :exclamation: |
+| Image & QR (URL & Base64) | :heavy_check_mark: | :heavy_check_mark: |
 | Fix cut | :heavy_check_mark: | :heavy_check_mark: |
 | Print With Column | :heavy_check_mark: | :heavy_check_mark: |
 | NET Connect Timeout | :heavy_check_mark: | :heavy_check_mark: |
