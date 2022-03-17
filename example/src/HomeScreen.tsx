@@ -247,7 +247,7 @@ export const HomeScreen = ({route}: any) => {
   const handlePrintBillWithImage = async () => {
     const Printer: typeof NetPrinter = printerList[selectedValue];
     Printer.printImage('https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/3a/bd/b5/the-food-bill.jpg', {
-      imageWidth: 575,
+      imageWidth: 100,
       // imageHeight: 1000,
       // paddingX: 100
     })

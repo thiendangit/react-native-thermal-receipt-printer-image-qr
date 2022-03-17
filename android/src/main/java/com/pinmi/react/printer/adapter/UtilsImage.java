@@ -33,7 +33,7 @@ public class UtilsImage {
         int width = image.getWidth();
         int height = image.getHeight();
         if (Integer.toString(imageWidth) != null || Integer.toString(imageHeight) != null) {
-            return getBitmapResized(image, 1, 0, 0);
+            return getBitmapResized(image, 1, imageWidth, imageHeight);
         }
         if (width > 200 || height > 200) {
             float decreaseSizeBy;
