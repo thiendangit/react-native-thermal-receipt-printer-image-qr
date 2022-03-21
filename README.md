@@ -13,7 +13,16 @@
 | NET Connect Timeout | :heavy_check_mark: | :heavy_check_mark: |
 
 :grey_exclamation:**`Print Image & QR with bluetooth in IOS just implement not tested yet`**
-<br /> <br />
+
+## Support
+
+| Printer    | Android            | IOS                |
+| ---------- | ------------------ | ------------------ |
+| USBPrinter | :heavy_check_mark: |                    |
+| BLEPrinter | :heavy_check_mark: | :heavy_check_mark: |
+| NetPrinter | :heavy_check_mark: | :heavy_check_mark: |
+
+<br />
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
 <img src="image/invoice.jpg" alt="bill" width="270" height="580"/>
 <img src="image/_screenshot.jpg" alt="screenshot" width="270" height="580"/>
