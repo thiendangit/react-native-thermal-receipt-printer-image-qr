@@ -154,11 +154,3 @@ _Podfile_
 ```
 
 and comment out code related to Flipper in `ios/AppDelegate.m`
-
-## Support
-
-| Printer    | Android            | IOS                |
-| ---------- | ------------------ | ------------------ |
-| USBPrinter | :heavy_check_mark: |                    |
-| BLEPrinter | :heavy_check_mark: | :heavy_check_mark: |
-| NetPrinter | :heavy_check_mark: | :heavy_check_mark: |
