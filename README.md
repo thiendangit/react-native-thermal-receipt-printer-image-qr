@@ -120,7 +120,6 @@ Printer.printBill(`${CENTER}Thank you\n`);
 Printer.printImage('https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/3a/bd/b5/the-food-bill.jpg', {
 imageWidth: 575,
 // imageHeight: 1000,
-/* only ios */
 // paddingX: 100
 })
 ```
