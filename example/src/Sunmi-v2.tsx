@@ -5,7 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   DeviceEventEmitter,
-  ScrollView, Alert,
+  ScrollView,
+  Alert,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 // @ts-ignore
@@ -67,7 +68,7 @@ const SunmiScreen = () => {
         ['Some item x 1', '', ''],
         ['', '', '$100'],
       ];
-      let columnAliment = [0, 1, 2];
+      let columnAlignment = [0, 1, 2];
       let columnWidth = [25, 1, 5];
       try {
         //set aligment: 0-left,1-center,2-right
@@ -92,11 +93,11 @@ const SunmiScreen = () => {
         // for (var i in orderList) {
         //   console.log(orderList[i]);
         //   console.log(columnWidth);
-        //   console.log(columnAliment);
+        //   console.log(columnAlignment);
         //   await SunmiV2Printer.printColumnsText(
         //     orderList[i],
         //     columnWidth,
-        //     columnAliment,
+        //     columnAlignment,
         //   );
         // }
         // await SunmiV2Printer.setFontSize(20);
@@ -134,14 +135,14 @@ const SunmiScreen = () => {
     <ScrollView
       style={{
         flex: 1,
-      }} >
-      <View style={styles.container} >
-        <Text >{`Printer Status: ${status}`}</Text >
-        <TouchableOpacity style={styles.button} onPress={() => print()} >
-          <Text style={styles.buttonText} >Print</Text >
-        </TouchableOpacity >
+      }}>
+      <View style={styles.container}>
+        <Text>{`Printer Status: ${status}`}</Text>
+        <TouchableOpacity style={styles.button} onPress={() => print()}>
+          <Text style={styles.buttonText}>Print</Text>
+        </TouchableOpacity>
         <QRCode value="hey" getRef={(el: React.ReactElement) => (QrRef = el)} />
-      </View >
+      </View>
       {/*<QRCodeScanner*/}
       {/*  onRead={onSuccess}*/}
       {/*  flashMode={RNCamera.Constants.FlashMode.auto as any}*/}
@@ -165,7 +166,7 @@ const SunmiScreen = () => {
           Alert.alert(JSON.stringify(data));
         }}
       />
-    </ScrollView >
+    </ScrollView>
   );
 };
 
