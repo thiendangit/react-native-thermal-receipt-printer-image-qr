@@ -153,19 +153,20 @@ public class BLEPrinterAdapter implements PrinterAdapter{
     private void connectBluetoothDevice(BluetoothDevice device, Boolean retry) throws IOException {
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
-        try {
-            if (retry) {
+        if (retry) {
+            try {
                 this.mBluetoothSocket = (BluetoothSocket) device.getClass()
                         .getMethod("createRfcommSocket", new Class[] { int.class }).invoke(device, 1);
-            } else {
-                this.mBluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(uuid);
-                this.mBluetoothSocket.connect();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            this.mBluetoothDevice = device;// 最后一步执行
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            this.mBluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(uuid);
+            this.mBluetoothSocket.connect();
         }
+
+        this.mBluetoothDevice = device;// 最后一步执行
+
     }
 
     @Override
