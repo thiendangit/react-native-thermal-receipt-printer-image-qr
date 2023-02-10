@@ -128,13 +128,19 @@ public class BLEPrinterAdapter implements PrinterAdapter{
             if(device.getAddress().equals(blePrinterDeviceId.getInnerMacAddress())){
 
                 try{
-                    connectBluetoothDevice(device);
+                    connectBluetoothDevice(device, false);
                     successCallback.invoke(new BLEPrinterDevice(this.mBluetoothDevice).toRNWritableMap());
                     return;
-                }catch (IOException e){
-                    e.printStackTrace();
-                    errorCallback.invoke(e.getMessage());
-                    return;
+                } catch (IOException e) {
+                    try {
+                        connectBluetoothDevice(device, true);
+                        successCallback.invoke(new BLEPrinterDevice(this.mBluetoothDevice).toRNWritableMap());
+                        return;
+                    } catch (IOException er) {
+                        er.printStackTrace();
+                        errorCallback.invoke(er.getMessage());
+                        return;
+                    }
                 }
             }
         }
@@ -144,11 +150,22 @@ public class BLEPrinterAdapter implements PrinterAdapter{
         return;
     }
 
-    private void connectBluetoothDevice(BluetoothDevice device) throws IOException{
+    private void connectBluetoothDevice(BluetoothDevice device, Boolean retry) throws IOException {
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-        this.mBluetoothSocket = device.createRfcommSocketToServiceRecord(uuid);
-        this.mBluetoothSocket.connect();
-        this.mBluetoothDevice = device;//最后一步执行
+
+        if (retry) {
+            try {
+                this.mBluetoothSocket = (BluetoothSocket) device.getClass()
+                        .getMethod("createRfcommSocket", new Class[] { int.class }).invoke(device, 1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            this.mBluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(uuid);
+            this.mBluetoothSocket.connect();
+        }
+
+        this.mBluetoothDevice = device;// 最后一步执行
 
     }
 
