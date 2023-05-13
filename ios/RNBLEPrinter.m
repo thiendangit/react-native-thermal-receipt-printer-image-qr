@@ -83,6 +83,9 @@ RCT_EXPORT_METHOD(printRawData:(NSString *)text
     @try {
         !m_printer ? [NSException raise:@"Invalid connection" format:@"printRawData: Can't connect to printer"] : nil;
 
+        NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:text options:0];
+        NSString *decodedString = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
+        
         NSNumber* boldPtr = [options valueForKey:@"bold"];
         NSNumber* alignCenterPtr = [options valueForKey:@"center"];
 
@@ -91,7 +94,7 @@ RCT_EXPORT_METHOD(printRawData:(NSString *)text
 
         bold ? [[PrinterSDK defaultPrinterSDK] sendHex:@"1B2108"] : [[PrinterSDK defaultPrinterSDK] sendHex:@"1B2100"];
         alignCenter ? [[PrinterSDK defaultPrinterSDK] sendHex:@"1B6102"] : [[PrinterSDK defaultPrinterSDK] sendHex:@"1B6101"];
-        [[PrinterSDK defaultPrinterSDK] printText:text];
+        [[PrinterSDK defaultPrinterSDK] printText:decodedString];
 
         NSNumber* beepPtr = [options valueForKey:@"beep"];
         NSNumber* cutPtr = [options valueForKey:@"cut"];
