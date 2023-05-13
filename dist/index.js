@@ -549,6 +549,15 @@ var BLEPrinter = {
    */
   printRaw: function (text) {
     if (Platform.OS === "ios") {
+      var processedText = textPreprocessingIOS(text, false, false);
+
+      RNBLEPrinter.printRawData(
+        processedText.text,
+        processedText.opts,
+        function (error) {
+          return console.warn(error);
+        }
+      );
     } else {
       RNBLEPrinter.printRawData(text, function (error) {
         return console.warn(error);
