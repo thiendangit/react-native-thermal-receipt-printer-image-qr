@@ -1,22 +1,19 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion = 32
-    buildToolsVersion = "32.0.0"
+    namespace "com.pinmi.react.printer"
+    compileSdkVersion 34
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 32
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-
+        minSdkVersion 23
+        targetSdkVersion 34
+        consumerProguardFiles 'consumer-rules.pro'
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    ourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
         }
     }
 }
