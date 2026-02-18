@@ -3,26 +3,27 @@
 ![npm](https://img.shields.io/npm/dw/react-native-thermal-receipt-printer-image-qr?logo=github)
 ![npm](https://img.shields.io/npm/v/react-native-thermal-receipt-printer-image-qr?color=green&logo=npm&logoColor=green)
 
-- I forked this for my quickly project, this is not the official project.
-- Fork of [`react-native-thermal-receipt-printer`](https://www.npmjs.com/package/react-native-thermal-receipt-printer) and add implement :
-  <br />
+A React Native library for thermal receipt printing with support for USB, BLE, and Network printers. This is a fork of [`react-native-thermal-receipt-printer`](https://www.npmjs.com/package/react-native-thermal-receipt-printer) with additional features:
 
-| Implement                 | Android            | IOS                |
-| ------------------------- | ------------------ | ------------------ |
-| Image & QR (URL & Base64) | :heavy_check_mark: | :heavy_check_mark: |
-| Fix cut                   | :heavy_check_mark: | :heavy_check_mark: |
-| Print With Column         | :heavy_check_mark: | :heavy_check_mark: |
-| NET Connect Timeout       | :heavy_check_mark: | :heavy_check_mark: |
+## 🆕 Features Added
 
-:grey_exclamation:**`Print Image & QR with bluetooth in IOS just implement not tested yet`**
+| Feature                  | Android | iOS |
+| ------------------------ | ------- | --- |
+| Image & QR Printing      | ✅      | ✅  |
+| Base64 Image Support     | ✅      | ✅  |
+| Fixed Paper Cutting      | ✅      | ✅  |
+| Column Text Printing     | ✅      | ✅  |
+| Network Connection Check | ✅      | ✅  |
 
-## Support
+> **Note**: Image & QR printing with Bluetooth on iOS is implemented but not yet tested.
 
-| Printer    | Android            | IOS                |
-| ---------- | ------------------ | ------------------ |
-| USBPrinter | :heavy_check_mark: |                    |
-| BLEPrinter | :heavy_check_mark: | :heavy_check_mark: |
-| NetPrinter | :heavy_check_mark: | :heavy_check_mark: |
+## 🖨️ Printer Support
+
+| Connection Type | Android | iOS |
+| --------------- | ------- | --- |
+| USB Printer     | ✅      |     |
+| BLE Printer     | ✅      | ✅  |
+| Network Printer | ✅      | ✅  |
 
 <br />
 <div style="display: flex; flex-direction: row; align-self: center; align-items: center">
@@ -30,86 +31,108 @@
 <img src="image/_screenshot.jpg" alt="screenshot" width="270" height="580"/>
 </div>
 
-## Installation
+## 📦 Installation
 
-```
-npm i react-native-thermal-receipt-printer-image-qr
+```bash
+npm install react-native-thermal-receipt-printer-image-qr
 ```
 
 or
 
-```
+```bash
 yarn add react-native-thermal-receipt-printer-image-qr
 ```
 
-next step
+### Next Steps
 
-```
-# RN >= 0.60
+```bash
+# For React Native >= 0.60
 cd ios && pod install
 
-# RN < 0.60
+# For React Native < 0.60
 react-native link react-native-thermal-receipt-printer-image-qr
 ```
 
-## API Reference
+> **Note**: This library no longer requires `react-native-ping` as a dependency. Network connection validation is now handled internally.
 
-```tsx
-    init: () => Promise;
-    getDeviceList: () => Promise;
-    /**
-     * `timeout`
-     * @default 4000ms
-     */
-    connectPrinter: (host: string, port: number, timeout?: number | undefined) => Promise;
-    closeConn: () => Promise;
-    /**
-     * Print text
-     */
-    printText: (text: string, opts?: {}) => void;
-    /**
-     * Print text & end the bill & cut
-     */
-    printBill: (text: string, opts?: PrinterOptions) => void;
-    /**
-     * print with image url
-     */
-    printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
-    /**
-     * Base 64 string
-     */
-    printImageBase64: (Base64: string, opts?: PrinterImageOptions) => void;
-    /**
-     * Only android print with encoder
-     */
-    printRaw: (text: string) => void;
-    /**
-     * print column
-     * 80mm => 46 character
-     * 58mm => 30 character
-     */
-    printColumnsText: (texts: string[], columnWidth: number[], columnAlignment: ColumnAlignment[], columnStyle?: string[], opts?: PrinterOptions) => void;
+## 🔧 API Reference
+
+```typescript
+interface PrinterAPI {
+	// Initialize printer
+	init(): Promise<void>;
+
+	// Get available devices
+	getDeviceList(): Promise<any[]>;
+
+	// Network printer connection
+	connectPrinter(host: string, port: number, timeout?: number): Promise<void>;
+	closeConn(): Promise<void>;
+
+	// Text printing
+	printText(text: string, opts?: object): void;
+	printBill(text: string, opts?: PrinterOptions): void;
+
+	// Image printing
+	printImage(imgUrl: string, opts?: PrinterImageOptions): void;
+	printImageBase64(Base64: string, opts?: PrinterImageOptions): void;
+
+	// Raw printing (Android only)
+	printRaw(text: string): void;
+
+	// Column text printing
+	printColumnsText(
+		texts: string[],
+		columnWidth: number[],
+		columnAlignment: ColumnAlignment[],
+		columnStyle?: string[],
+		opts?: PrinterOptions,
+	): void;
+}
 ```
 
-## Styling
+## 🎨 Styling & Commands
 
-```js
+```typescript
+import {
+	COMMANDS,
+	ColumnAlignment,
+	PrinterOptions,
+	PrinterImageOptions,
+} from "react-native-thermal-receipt-printer-image-qr";
+
+// Text formatting commands
+const BOLD_ON = COMMANDS.TEXT_FORMAT.TXT_BOLD_ON;
+const BOLD_OFF = COMMANDS.TEXT_FORMAT.TXT_BOLD_OFF;
+const ALIGN_CENTER = COMMANDS.ALIGN.CENTER;
+const ALIGN_LEFT = COMMANDS.ALIGN.LEFT;
+const ALIGN_RIGHT = COMMANDS.ALIGN.RIGHT;
+
+// Column alignment options
+enum ColumnAlignment {
+	LEFT = 0,
+	CENTER = 1,
+	RIGHT = 2,
+}
+```
+
+[See all available commands](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/dist/utils/printer-commands.js)
+
+## 💡 Usage Examples
+
+### Print Column Text
+
+```typescript
+import RNPrinter from "react-native-thermal-receipt-printer-image-qr";
 import {
 	COMMANDS,
 	ColumnAlignment,
 } from "react-native-thermal-receipt-printer-image-qr";
-```
 
-[See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/dist/utils/printer-commands.js)
-
-## Example
-
-**`Print Columns Text`**
-
-```tsx
 const BOLD_ON = COMMANDS.TEXT_FORMAT.TXT_BOLD_ON;
 const BOLD_OFF = COMMANDS.TEXT_FORMAT.TXT_BOLD_OFF;
-let orderList = [
+
+const orderList = [
 	["1. Skirt Palas Labuh Muslimah Fashion", "x2", "500$"],
 	["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4222", "500$"],
 	[
@@ -120,32 +143,43 @@ let orderList = [
 	["4. Retro Buttons Up Full Sleeve Loose", "x10", "200$"],
 	["5. Retro Buttons Up", "x10", "200$"],
 ];
-let columnAlignment = [
+
+const columnAlignment = [
 	ColumnAlignment.LEFT,
 	ColumnAlignment.CENTER,
 	ColumnAlignment.RIGHT,
 ];
-let columnWidth = [46 - (7 + 12), 7, 12];
+
+const columnWidth = [46 - (7 + 12), 7, 12]; // 80mm paper width
 const header = ["Product list", "Qty", "Price"];
-Printer.printColumnsText(header, columnWidth, columnAlignment, [
+
+// Print header
+RNPrinter.printColumnsText(header, columnWidth, columnAlignment, [
 	`${BOLD_ON}`,
 	"",
 	"",
 ]);
-for (let i in orderList) {
-	Printer.printColumnsText(orderList[i], columnWidth, columnAlignment, [
+
+// Print order items
+for (const item of orderList) {
+	RNPrinter.printColumnsText(item, columnWidth, columnAlignment, [
 		`${BOLD_OFF}`,
 		"",
 		"",
 	]);
 }
-Printer.printBill(`${CENTER}Thank you\n`);
+
+// Print footer
+RNPrinter.printBill(`${COMMANDS.ALIGN.CENTER}Thank you\n`);
 ```
 
-**`Print image`**
+### Print Image
 
-```tsx
-Printer.printImage(
+```typescript
+import RNPrinter from "react-native-thermal-receipt-printer-image-qr";
+
+// Print image from URL
+RNPrinter.printImage(
 	"https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/3a/bd/b5/the-food-bill.jpg",
 	{
 		imageWidth: 575,
@@ -153,35 +187,79 @@ Printer.printImage(
 		// paddingX: 100
 	},
 );
+
+// Print base64 image
+const base64Image = "iVBORw0KGgoAAAANSUhEUgAA..."; // Your base64 string
+RNPrinter.printImageBase64(base64Image, {
+	imageWidth: 300,
+});
 ```
 
-[See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/example/src/HomeScreen.tsx)
+### Network Printer Connection
 
-## Troubleshoot
+```typescript
+import RNPrinter from "react-native-thermal-receipt-printer-image-qr";
 
-- When installing `react-native` version >= 0.60, XCode shows this error:
+try {
+	// Initialize
+	await RNPrinter.init();
+
+	// Connect to network printer (default port 9100)
+	await RNPrinter.connectPrinter("192.168.1.100", 9100, 5000);
+
+	// Print something
+	RNPrinter.printText("Hello World!");
+
+	// Close connection
+	await RNPrinter.closeConn();
+} catch (error) {
+	console.error("Printer error:", error);
+}
+```
+
+[See complete example](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/example/src/HomeScreen.tsx)
+
+## 🔧 Troubleshooting
+
+### iOS Build Issues
+
+When using React Native >= 0.60, you may encounter this error in XCode:
 
 ```
 duplicate symbols for architecture x86_64
 ```
 
-That's because the .a library uses [CocoaAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket) library and Flipper uses it too.
+This occurs because the library uses [CocoaAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket) which conflicts with Flipper.
 
-_Podfile_
+**Solution:**
+
+In your `ios/Podfile`, comment out or remove Flipper-related lines:
 
 ```diff
 ...
   use_native_modules!
 
-  # Enables Flipper.
-  #
-  # Note that if you have use_frameworks! enabled, Flipper will not work and
-  # you should disable these next few lines.
-  # add_flipper_pods!
-  # post_install do |installer|
-  #   flipper_post_install(installer)
-  # end
+- # Enables Flipper.
+- #
+- # Note that if you have use_frameworks! enabled, Flipper will not work and
+- # you should disable these next few lines.
+- add_flipper_pods!
+- post_install do |installer|
+-   flipper_post_install(installer)
+- end
 ...
 ```
 
-and comment out code related to Flipper in `ios/AppDelegate.m`
+Also comment out Flipper code in `ios/AppDelegate.m`.
+
+### Network Connection Issues
+
+- Ensure the printer IP is accessible from your device
+- Check that port 9100 is open on the printer
+- Verify network firewall settings
+
+### Android USB Issues
+
+- Ensure USB debugging is enabled
+- Check device permissions for USB access
+- Some Android versions may require additional USB driver setup
