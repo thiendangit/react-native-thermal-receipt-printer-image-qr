@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Buffer } from "buffer";
 export default class BufferHelper {
     buffers: Buffer[];
