@@ -18,8 +18,8 @@ RCT_EXPORT_METHOD(init:(RCTResponseSenderBlock)successCallback
         _printerArray = [NSMutableArray new];
         m_printer = [[NSObject alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNetPrinterConnectedNotification:) name:@"NetPrinterConnected" object:nil];
-        // API MISUSE: <CBCentralManager> can only accept this command while in the powered on state
-        [[PrinterSDK defaultPrinterSDK] scanPrintersWithCompletion:^(Printer* printer){}];
+        // Do NOT call scanPrintersWithCompletion here — CoreBluetooth may not be powered on yet,
+        // which causes "API MISUSE: CBCentralManager can only accept this command while in powered on state"
         successCallback(@[@"Init successful"]);
     } @catch (NSException *exception) {
         errorCallback(@[@"No bluetooth adapter available"]);
@@ -35,16 +35,22 @@ RCT_EXPORT_METHOD(getDeviceList:(RCTResponseSenderBlock)successCallback
                   fail:(RCTResponseSenderBlock)errorCallback) {
     @try {
         !_printerArray ? [NSException raise:@"Null pointer exception" format:@"Must call init function first"] : nil;
+        // Reset array before each scan so we don't accumulate stale devices
+        _printerArray = [NSMutableArray new];
         [[PrinterSDK defaultPrinterSDK] scanPrintersWithCompletion:^(Printer* printer){
             [_printerArray addObject:printer];
+        }];
+        // Wait for BLE scan to collect devices, then return the full list once
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             NSMutableArray *mapped = [NSMutableArray arrayWithCapacity:[_printerArray count]];
             [_printerArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                Printer *printer = (Printer *)obj;
                 NSDictionary *dict = @{ @"device_name" : printer.name, @"inner_mac_address" : printer.UUIDString};
                 [mapped addObject:dict];
             }];
-            NSMutableArray *uniquearray = (NSMutableArray *)[[NSSet setWithArray:mapped] allObjects];;
+            NSMutableArray *uniquearray = (NSMutableArray *)[[NSSet setWithArray:mapped] allObjects];
             successCallback(@[uniquearray]);
-        }];
+        });
     } @catch (NSException *exception) {
         errorCallback(@[exception.reason]);
     }
@@ -83,24 +89,25 @@ RCT_EXPORT_METHOD(printRawData:(NSString *)text
     @try {
         !m_printer ? [NSException raise:@"Invalid connection" format:@"printRawData: Can't connect to printer"] : nil;
 
-        NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:text options:0];
-        NSString *decodedString = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
-        
+        // On iOS the JS layer sends plain text (not base64), so use the string directly.
+        // Previously this tried to base64-decode the text, which produced nil and printed blank paper.
+        NSString *printString = text;
+
         NSNumber* boldPtr = [options valueForKey:@"bold"];
         NSNumber* alignCenterPtr = [options valueForKey:@"center"];
 
-        BOOL bold = (BOOL)[boldPtr intValue];
-        BOOL alignCenter = (BOOL)[alignCenterPtr intValue];
+        BOOL bold = boldPtr ? (BOOL)[boldPtr intValue] : NO;
+        BOOL alignCenter = alignCenterPtr ? (BOOL)[alignCenterPtr intValue] : NO;
 
         bold ? [[PrinterSDK defaultPrinterSDK] sendHex:@"1B2108"] : [[PrinterSDK defaultPrinterSDK] sendHex:@"1B2100"];
         alignCenter ? [[PrinterSDK defaultPrinterSDK] sendHex:@"1B6102"] : [[PrinterSDK defaultPrinterSDK] sendHex:@"1B6101"];
-        [[PrinterSDK defaultPrinterSDK] printText:decodedString];
+        [[PrinterSDK defaultPrinterSDK] printText:printString];
 
         NSNumber* beepPtr = [options valueForKey:@"beep"];
         NSNumber* cutPtr = [options valueForKey:@"cut"];
 
-        BOOL beep = (BOOL)[beepPtr intValue];
-        BOOL cut = (BOOL)[cutPtr intValue];
+        BOOL beep = beepPtr ? (BOOL)[beepPtr intValue] : NO;
+        BOOL cut = cutPtr ? (BOOL)[cutPtr intValue] : NO;
 
         beep ? [[PrinterSDK defaultPrinterSDK] beep] : nil;
         cut ? [[PrinterSDK defaultPrinterSDK] cutPaper] : nil;
