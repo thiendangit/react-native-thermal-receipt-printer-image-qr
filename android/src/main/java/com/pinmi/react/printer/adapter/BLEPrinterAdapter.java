@@ -200,11 +200,17 @@ public class BLEPrinterAdapter implements PrinterAdapter{
                 byte [] bytes = Base64.decode(rawData, Base64.DEFAULT);
                 try{
                     OutputStream printerOutputStream = socket.getOutputStream();
+                    if (printerOutputStream == null) {
+                        Log.e(LOG_TAG, "output stream is null - bluetooth connection may have been lost");
+                        errorCallback.invoke("bluetooth output stream is null - printer may have disconnected");
+                        return;
+                    }
                     printerOutputStream.write(bytes, 0, bytes.length);
                     printerOutputStream.flush();
                 }catch (IOException e){
                     Log.e(LOG_TAG, "failed to print data" + rawData);
                     e.printStackTrace();
+                    errorCallback.invoke("IO error while printing: " + e.getMessage());
                 }
 
             }
