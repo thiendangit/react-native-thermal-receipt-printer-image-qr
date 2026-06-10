@@ -243,8 +243,8 @@ var USBPrinter = {
   connectPrinter: function (vendorId, productId) {
     return new Promise(function (resolve, reject) {
       return RNUSBPrinter.connectPrinter(
-        vendorId,
-        productId,
+        typeof vendorId === 'string' ? parseInt(vendorId, 10) : vendorId,
+        typeof productId === 'string' ? parseInt(productId, 10) : productId,
         function (printer) {
           return resolve(printer);
         },

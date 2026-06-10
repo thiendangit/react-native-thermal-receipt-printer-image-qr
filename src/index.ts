@@ -128,7 +128,7 @@ const USBPrinter = {
       )
     ),
 
-  connectPrinter: (vendorId: string, productId: string): Promise<IUSBPrinter> =>
+  connectPrinter: (vendorId: number, productId: number): Promise<IUSBPrinter> =>
     new Promise((resolve, reject) =>
       RNUSBPrinter.connectPrinter(
         vendorId,
