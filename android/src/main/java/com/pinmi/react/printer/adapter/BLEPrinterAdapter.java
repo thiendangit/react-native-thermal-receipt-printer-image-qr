@@ -1,4 +1,5 @@
 package com.pinmi.react.printer.adapter;
+import static com.pinmi.react.printer.adapter.UtilsImage.getBitmapFromURL;
 import static com.pinmi.react.printer.adapter.UtilsImage.getPixelsSlow;
 import static com.pinmi.react.printer.adapter.UtilsImage.recollectSlice;
 import android.bluetooth.BluetoothAdapter;
@@ -13,18 +14,13 @@ import android.widget.Toast;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.net.URL;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import android.graphics.BitmapFactory;
 /**
  * Created by xiesubin on 2017/9/21.
  */
@@ -211,28 +207,9 @@ public class BLEPrinterAdapter implements PrinterAdapter{
         }).start();
     }
 
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            myBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-
-            return myBitmap;
-        } catch (IOException e) {
-            // Log exception
-            return null;
-        }
-    }
-
     @Override
     public void printImageData(String imageUrl, int  imageWidth, int imageHeight, Callback errorCallback) {
-        final Bitmap bitmapImage = getBitmapFromURL(imageUrl);
+        final Bitmap bitmapImage = getBitmapFromURL(imageUrl, imageWidth, imageHeight);
 
         if(bitmapImage == null) {
             errorCallback.invoke("image not found");

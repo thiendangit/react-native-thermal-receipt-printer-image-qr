@@ -1,9 +1,59 @@
 package com.pinmi.react.printer.adapter;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class UtilsImage {
+    // Printers only ever render at reqWidth/reqHeight (see getPixelsSlow below), so
+    // decoding the source at full resolution just to downscale it afterwards wastes
+    // memory on large images. Downsample during decode instead.
+    public static Bitmap getBitmapFromURL(String src, int reqWidth, int reqHeight) {
+        try {
+            BitmapFactory.Options boundsOptions = new BitmapFactory.Options();
+            boundsOptions.inJustDecodeBounds = true;
+            InputStream boundsInput = new URL(src).openStream();
+            try {
+                BitmapFactory.decodeStream(boundsInput, null, boundsOptions);
+            } finally {
+                boundsInput.close();
+            }
+
+            BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
+            decodeOptions.inSampleSize = calculateInSampleSize(boundsOptions, reqWidth, reqHeight);
+            InputStream decodeInput = new URL(src).openStream();
+            try {
+                return BitmapFactory.decodeStream(decodeInput, null, decodeOptions);
+            } finally {
+                decodeInput.close();
+            }
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        int inSampleSize = 1;
+        if (reqWidth <= 0 || reqHeight <= 0) {
+            return inSampleSize;
+        }
+        int height = options.outHeight;
+        int width = options.outWidth;
+        if (height > reqHeight || width > reqWidth) {
+            int halfHeight = height / 2;
+            int halfWidth = width / 2;
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
+
     public static Bitmap getBitmapResized(Bitmap image, float decreaseSizeBy, int imageWidth, int imageHeight) {
         int imageWidthForResize = image.getWidth();
         int imageHeightForResize = image.getHeight();
