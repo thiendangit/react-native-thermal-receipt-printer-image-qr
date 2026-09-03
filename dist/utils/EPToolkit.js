@@ -67,6 +67,7 @@ export function exchange_text(text, options) {
         var ch = text[i];
         switch (ch) {
             case "<":
+                // @ts-ignore
                 bytes.concat(iconv.encode(temp, m_options.encoding));
                 temp = "";
                 // add bytes for changing font and justifying text
@@ -79,6 +80,7 @@ export function exchange_text(text, options) {
                 break;
             case "\n":
                 temp = "".concat(temp).concat(ch);
+                // @ts-ignore
                 bytes.concat(iconv.encode(temp, m_options.encoding));
                 bytes.concat(reset_bytes);
                 temp = "";
@@ -88,21 +90,29 @@ export function exchange_text(text, options) {
                 break;
         }
     }
+    // @ts-ignore
     temp.length && bytes.concat(iconv.encode(temp, m_options.encoding));
     // check for "encoding" flag
-    if (typeof m_options["encoding"] === "boolean" && options_controller["encoding"]) {
+    if (typeof m_options["encoding"] === "boolean" &&
+        options_controller["encoding"]) {
         bytes.concat(options_controller["encoding"]);
     }
     // check for "tailingLine" flag
-    if (typeof m_options["tailingLine"] === "boolean" && m_options["tailingLine"] && options_controller["tailingLine"]) {
+    if (typeof m_options["tailingLine"] === "boolean" &&
+        m_options["tailingLine"] &&
+        options_controller["tailingLine"]) {
         bytes.concat(options_controller["tailingLine"]);
     }
     // check for "cut" flag
-    if (typeof m_options["cut"] === "boolean" && m_options["cut"] && options_controller["cut"]) {
+    if (typeof m_options["cut"] === "boolean" &&
+        m_options["cut"] &&
+        options_controller["cut"]) {
         bytes.concat(options_controller["cut"]);
     }
     // check for "beep" flag
-    if (typeof m_options["beep"] === "boolean" && m_options["beep"] && options_controller["beep"]) {
+    if (typeof m_options["beep"] === "boolean" &&
+        m_options["beep"] &&
+        options_controller["beep"]) {
         bytes.concat(options_controller["beep"]);
     }
     return bytes.toBuffer();

@@ -1,24 +1,11 @@
-// @ts-ignore
-import Ping from 'react-native-ping';
-
-export const connectToHost = (ipAddress: string, timeout = 4000) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      /**
-       *
-       * Get RTT (Round-trip delay time)
-       *
-       * @static
-       * @param {string} ipAddress - For example : 8.8.8.8
-       * @param {Object} option - Some optional operations
-       * @param {number} option.timeout - timeout
-       * @returns
-       * @memberof Ping
-       */
-      await Ping.start(ipAddress, {timeout: timeout});
-      resolve(true)
-    } catch (error) {
-      reject(error)
-    }
-  })
-}
+export const connectToHost = (ipAddress: string, _timeout = 4000) => {
+	return new Promise((resolve, reject) => {
+		// Simple IP address validation - the actual connection will be
+		// established by the native printer module
+		if (ipAddress && ipAddress.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)) {
+			resolve(true);
+		} else {
+			reject(new Error("Invalid IP address"));
+		}
+	});
+};
