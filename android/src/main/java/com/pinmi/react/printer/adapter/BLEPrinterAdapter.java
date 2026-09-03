@@ -198,9 +198,16 @@ public class BLEPrinterAdapter implements PrinterAdapter{
                     OutputStream printerOutputStream = socket.getOutputStream();
                     printerOutputStream.write(bytes, 0, bytes.length);
                     printerOutputStream.flush();
-                }catch (IOException e){
+                }catch (Exception e){
+                    // Catches more than IOException on purpose: a socket whose
+                    // connection dropped after connect() (printer powered off,
+                    // out of range) surfaces as a NullPointerException from
+                    // BluetoothSocket.write() on some Android/OEM builds, not
+                    // an IOException — left uncaught, that crashes the whole
+                    // app since this runs on a bare Thread with no handler.
                     Log.e(LOG_TAG, "failed to print data" + rawData);
                     e.printStackTrace();
+                    errorCallback.invoke("failed to print: " + e.getMessage());
                 }
 
             }
@@ -250,9 +257,12 @@ public class BLEPrinterAdapter implements PrinterAdapter{
             printerOutputStream.write(LINE_FEED);
 
             printerOutputStream.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
+            // See printRawData() — a dead socket can throw NullPointerException
+            // here too, not just IOException.
             Log.e(LOG_TAG, "failed to print data");
             e.printStackTrace();
+            errorCallback.invoke("failed to print: " + e.getMessage());
         }
     }
 
@@ -297,9 +307,12 @@ public class BLEPrinterAdapter implements PrinterAdapter{
             printerOutputStream.write(LINE_FEED);
 
             printerOutputStream.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
+            // See printRawData() — a dead socket can throw NullPointerException
+            // here too, not just IOException.
             Log.e(LOG_TAG, "failed to print data");
             e.printStackTrace();
+            errorCallback.invoke("failed to print: " + e.getMessage());
         }
     }
 }
