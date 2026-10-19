@@ -20,6 +20,7 @@ import android.util.Log;
 import android.widget.Toast;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 
 
 import com.facebook.react.bridge.Callback;
@@ -107,12 +108,18 @@ public class USBPrinterAdapter implements PrinterAdapter {
     public void init(ReactApplicationContext reactContext, Callback successCallback, Callback errorCallback) {
         this.mContext = reactContext;
         this.mUSBManager = (UsbManager) this.mContext.getSystemService(Context.USB_SERVICE);
-        this.mPermissionIndent = PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+        this.mPermissionIndent = PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
-        mContext.registerReceiver(mUsbDeviceReceiver, filter);
+        // Android 14 (API 34)+ runtime receiver icin export flag zorunlu. ACTION_USB_PERMISSION
+        // uygulamaya ozel bir action oldugu icin RECEIVER_NOT_EXPORTED (deger 4, API 33 sabiti).
+        if (Build.VERSION.SDK_INT >= 33) {
+            mContext.registerReceiver(mUsbDeviceReceiver, filter, 4 /* Context.RECEIVER_NOT_EXPORTED */);
+        } else {
+            mContext.registerReceiver(mUsbDeviceReceiver, filter);
+        }
         Log.v(LOG_TAG, "RNUSBPrinter initialized");
         successCallback.invoke();
     }
@@ -350,15 +357,6 @@ public class USBPrinterAdapter implements PrinterAdapter {
                 // Do a line feed, if not the printing will resume on the same line
                 mUsbDeviceConnection.bulkTransfer(mEndPoint, LINE_FEED, LINE_FEED.length, 100000);
             }
-
-            // 1. Ka??d? biraz daha ilerlet 
-            byte[] feedLines = new byte[]{0x1B, 0x64, 0x03}; // 3 sat?r bo?luk besle
-            mUsbDeviceConnection.bulkTransfer(mEndPoint, feedLines, feedLines.length, 100000);
-
-            // 3. KA?IDI KES (Cut)
-            // 0x1D, 0x56, 0x42, 0x00 komutu: Besle ve tam kes
-            byte[] cutCommand = new byte[]{0x1D, 0x56, 0x42, 0x00};
-            mUsbDeviceConnection.bulkTransfer(mEndPoint, cutCommand, cutCommand.length, 100000);
 
             mUsbDeviceConnection.bulkTransfer(mEndPoint, SET_LINE_SPACE_32, SET_LINE_SPACE_32.length, 100000);
             mUsbDeviceConnection.bulkTransfer(mEndPoint, LINE_FEED, LINE_FEED.length, 100000);

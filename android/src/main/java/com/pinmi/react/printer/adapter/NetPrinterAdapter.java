@@ -16,6 +16,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +24,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +56,9 @@ public class NetPrinterAdapter implements PrinterAdapter {
     private static final byte[] CENTER_ALIGN = {0x1B, 0X61, 0X31};
 
     private Socket mSocket;
+
+    // Yazicinin gonderilen veriyi alip baglantiyi kapatmasi icin azami bekleme
+    private static final int DRAIN_TIMEOUT_MS = 10000;
 
     private boolean isRunning = false;
 
@@ -219,11 +224,14 @@ public class NetPrinterAdapter implements PrinterAdapter {
         }
         final String rawData = rawBase64Data;
         final Socket socket = this.mSocket;
+        // Soket artik bu ise ait; JS'in hemen ardindan cagirdigi closeConn onu kapatmasin
+        this.mSocket = null;
         Log.v(LOG_TAG, "start to print raw data " + rawBase64Data);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    discardPendingInput(socket);
                     byte[] bytes = Base64.decode(rawData, Base64.DEFAULT);
                     OutputStream printerOutputStream = socket.getOutputStream();
                     printerOutputStream.write(bytes, 0, bytes.length);
@@ -231,6 +239,8 @@ public class NetPrinterAdapter implements PrinterAdapter {
                 } catch (IOException e) {
                     Log.e(LOG_TAG, "failed to print data" + rawData);
                     e.printStackTrace();
+                } finally {
+                    finishAndClose(socket);
                 }
             }
         }).start();
@@ -305,7 +315,6 @@ public class NetPrinterAdapter implements PrinterAdapter {
         }
     }
 
-    
     @Override
     public void printImageBase64(final Bitmap bitmapImage, int imageWidth, int imageHeight, Callback errorCallback) {
         if (bitmapImage == null) {
@@ -319,11 +328,16 @@ public class NetPrinterAdapter implements PrinterAdapter {
         }
 
         final Socket socket = this.mSocket;
+        // Soket artik bu ise ait; JS'in hemen ardindan cagirdigi closeConn onu kapatmasin,
+        // finishAndClose veri yaziciya ulastiktan sonra kapatir
+        this.mSocket = null;
 
         try {
             int[][] pixels = getPixelsSlow(bitmapImage, imageWidth, imageHeight);
 
-            OutputStream printerOutputStream = socket.getOutputStream();
+            discardPendingInput(socket);
+            // 3 baytlik write'lar tek tek TCP'ye gitmesin
+            OutputStream printerOutputStream = new BufferedOutputStream(socket.getOutputStream(), 64 * 1024);
 
             printerOutputStream.write(SET_LINE_SPACE_24);
             printerOutputStream.write(CENTER_ALIGN);
@@ -350,14 +364,74 @@ public class NetPrinterAdapter implements PrinterAdapter {
 
            printerOutputStream.write(new byte[] { 0x1D, 0x56, 0x00 }); // CUT
 
+           // 2. PARA ÇEKMECESİNİ AÇ (CASH DRAWER KICK-OUT)
+           // Eğer çekmece açılmazsa ilk sıradaki 0x00 değerini 0x01 yaparak deneyebilirsiniz.
            byte[] openDrawerCommand = new byte[] { 0x1B, 0x70, 0x00, 0x19, (byte) 0xFA };
            printerOutputStream.write(openDrawerCommand);
-  
+
+           // 3. PRINTER BUZZER (ESC B n t): 2 kez, her biri 200ms (t x 100ms).
+           // Buzzer'i olmayan modeller komutu yok sayar.
+           printerOutputStream.write(new byte[] { 0x1B, 0x42, 0x02, 0x02 });
+
+
            printerOutputStream.flush();
         } catch (IOException e) {
             Log.e(LOG_TAG, "failed to print data");
             e.printStackTrace();
+        } finally {
+            finishAndCloseAsync(socket);
         }
     }
-    
+
+    // Yazicinin gonderdigi (ASB durum baytlari vb.) okunmamis veriyi at.
+    // Okunmamis veri varken close() RST gonderir ve henuz gitmemis fis verisi kaybolur.
+    private void discardPendingInput(Socket socket) {
+        try {
+            InputStream in = socket.getInputStream();
+            int available;
+            while ((available = in.available()) > 0) {
+                if (in.skip(available) <= 0) break;
+            }
+        } catch (IOException e) {
+            Log.w(LOG_TAG, "discardPendingInput: " + e.getMessage());
+        }
+    }
+
+    // flush() veriyi sadece cekirdek tamponuna birakir; hemen close() edilirse fisin sonu
+    // (kesme komutu dahil) yaziciya ulasmayabilir -> fis yarida kalir.
+    // shutdownOutput() kalan veriyi gonderip FIN yollar; yazici kapatana (EOF) ya da sure
+    // dolana kadar gelen veri okunarak RST'siz kapanis saglanir.
+    private void finishAndClose(Socket socket) {
+        try {
+            if (!socket.isClosed() && !socket.isOutputShutdown()) {
+                socket.shutdownOutput();
+            }
+            socket.setSoTimeout(DRAIN_TIMEOUT_MS);
+            InputStream in = socket.getInputStream();
+            byte[] buf = new byte[256];
+            while (in.read(buf) != -1) {
+                // yazicidan gelen durum baytlarini at
+            }
+        } catch (SocketTimeoutException e) {
+            Log.w(LOG_TAG, "printer did not close connection in " + DRAIN_TIMEOUT_MS + "ms");
+        } catch (IOException e) {
+            Log.w(LOG_TAG, "finishAndClose: " + e.getMessage());
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // RN native modul thread'ini bloklamamak icin arka planda
+    private void finishAndCloseAsync(final Socket socket) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                finishAndClose(socket);
+            }
+        }).start();
+    }
 }
