@@ -1,5 +1,6 @@
 package com.pinmi.react.printer.adapter;
 
+import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 
 import com.facebook.react.bridge.Arguments;
@@ -35,7 +36,19 @@ public class USBPrinterDevice implements PrinterDevice{
         deviceMap.putInt("device_id", this.mDevice.getDeviceId());
         deviceMap.putInt("vendor_id", this.mDevice.getVendorId());
         deviceMap.putInt("product_id", this.mDevice.getProductId());
+        deviceMap.putString("manufacturer_name", this.mDevice.getManufacturerName());
+        deviceMap.putString("product_name", this.mDevice.getProductName());
+        deviceMap.putBoolean("is_printer", isPrinter());
         return deviceMap;
+    }
+
+    // Cihaz veya arayuzlerinden biri USB printer sinifinda (7) mi
+    public boolean isPrinter() {
+        if (this.mDevice.getDeviceClass() == UsbConstants.USB_CLASS_PRINTER) return true;
+        for (int i = 0; i < this.mDevice.getInterfaceCount(); i++) {
+            if (this.mDevice.getInterface(i).getInterfaceClass() == UsbConstants.USB_CLASS_PRINTER) return true;
+        }
+        return false;
     }
 
 }

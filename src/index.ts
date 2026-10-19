@@ -37,6 +37,16 @@ export interface IUSBPrinter {
   device_name: string;
   vendor_id: string;
   product_id: string;
+  device_id?: number;
+  manufacturer_name?: string | null;
+  product_name?: string | null;
+  is_printer?: boolean;
+}
+
+export interface IUSBPrinterStatus {
+  attached: boolean;
+  permission: boolean;
+  selected: boolean;
 }
 
 export interface IBLEPrinter {
@@ -143,6 +153,31 @@ const USBPrinter = {
       RNUSBPrinter.closeConn();
       resolve();
     }),
+
+  /**
+   * android only: takili mi, izin var mi, secili mi
+   */
+  getStatus: (vendorId: number, productId: number): Promise<IUSBPrinterStatus> =>
+    RNUSBPrinter.getStatus(vendorId, productId),
+
+  /**
+   * android only: yazici veriyi aldiginda resolve, hata olursa reject
+   */
+  printImageBase64Async: (
+    Base64: string,
+    opts: PrinterImageOptions = {}
+  ): Promise<void> =>
+    RNUSBPrinter.printImageBase64Async(
+      Base64,
+      opts?.imageWidth ?? 0,
+      opts?.imageHeight ?? 0
+    ),
+
+  /**
+   * android only: base64 ESC/POS verisi
+   */
+  printRawAsync: (base64Data: string): Promise<void> =>
+    RNUSBPrinter.printRawDataAsync(base64Data),
 
   printText: (text: string, opts: PrinterOptions = {}): void =>
     RNUSBPrinter.printRawData(textTo64Buffer(text, opts), (error: Error) =>

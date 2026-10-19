@@ -6,6 +6,7 @@ import android.util.Base64;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -53,14 +54,11 @@ public class RNUSBPrinterModule extends ReactContextBaseJavaModule implements RN
     public void getDeviceList(Callback successCallback, Callback errorCallback)  {
         List<PrinterDevice> printerDevices = adapter.getDeviceList(errorCallback);
         WritableArray pairedDeviceList = Arguments.createArray();
-        if(printerDevices.size() > 0) {
-            for (PrinterDevice printerDevice : printerDevices) {
-                pairedDeviceList.pushMap(printerDevice.toRNWritableMap());
-            }
-            successCallback.invoke(pairedDeviceList);
-        }else{
-            errorCallback.invoke("No Device Found");
+        // Bos liste hata degil: takili cihaz yok
+        for (PrinterDevice printerDevice : printerDevices) {
+            pairedDeviceList.pushMap(printerDevice.toRNWritableMap());
         }
+        successCallback.invoke(pairedDeviceList);
     }
 
     @ReactMethod
@@ -88,6 +86,32 @@ public class RNUSBPrinterModule extends ReactContextBaseJavaModule implements RN
     @ReactMethod
     public void connectPrinter(Integer vendorId, Integer productId, Callback successCallback, Callback errorCallback) {
         adapter.selectDevice(USBPrinterDeviceId.valueOf(vendorId, productId), successCallback, errorCallback);
+    }
+
+    @ReactMethod
+    public void getStatus(int vendorId, int productId, Promise promise) {
+        promise.resolve(USBPrinterAdapter.getInstance().getStatus(vendorId, productId));
+    }
+
+    @ReactMethod
+    public void printRawDataAsync(String base64Data, Promise promise) {
+        USBPrinterAdapter.getInstance().printRawDataAsync(base64Data, promise);
+    }
+
+    @ReactMethod
+    public void printImageBase64Async(String base64, int imageWidth, int imageHeight, Promise promise) {
+        byte[] decodedString = Base64.decode(base64, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        USBPrinterAdapter.getInstance().printImageBase64Async(decodedByte, imageWidth, imageHeight, promise);
+    }
+
+    // NativeEventEmitter uyarisi icin gerekli; olaylar DeviceEventEmitter ile gonderiliyor
+    @ReactMethod
+    public void addListener(String eventName) {
+    }
+
+    @ReactMethod
+    public void removeListeners(Integer count) {
     }
 
     @Override

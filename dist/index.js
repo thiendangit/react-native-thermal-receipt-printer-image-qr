@@ -260,6 +260,32 @@ var USBPrinter = {
       resolve();
     });
   },
+  /**
+   * android only: takili mi, izin var mi, secili mi
+   */
+  getStatus: function (vendorId, productId) {
+    return RNUSBPrinter.getStatus(vendorId, productId);
+  },
+  /**
+   * android only: yazici veriyi aldiginda resolve, hata olursa reject
+   */
+  printImageBase64Async: function (Base64, opts) {
+    var _a, _b;
+    if (opts === void 0) {
+      opts = {};
+    }
+    return RNUSBPrinter.printImageBase64Async(
+      Base64,
+      (_a = opts === null || opts === void 0 ? void 0 : opts.imageWidth) !== null && _a !== void 0 ? _a : 0,
+      (_b = opts === null || opts === void 0 ? void 0 : opts.imageHeight) !== null && _b !== void 0 ? _b : 0
+    );
+  },
+  /**
+   * android only: base64 ESC/POS verisi
+   */
+  printRawAsync: function (base64Data) {
+    return RNUSBPrinter.printRawDataAsync(base64Data);
+  },
   printText: function (text, opts) {
     if (opts === void 0) {
       opts = {};
